@@ -296,13 +296,14 @@ public class AdapterModel implements SessionListener{
                 String salamat = objectData.getString("alamat");
                 String sno_telp = objectData.getString("no_telp");
                 String semail = objectData.getString("email");
-                String simage = objectData.getString("iamge");
+                String simage = objectData.getString("image");
                 String sdate_add = objectData.getString("date_add");
                 String sdate_modified = objectData.getString("date_modified");
                 String skey = objectData.getString("key");
                 String sreferral = objectData.getString("referral");
                 String sconfirm = objectData.getString("confirm");
                 String ssha = objectData.getString("sha");
+                session.setStateLogin("true");
                 session.setSession(snama, salamat, sno_telp, semail, skey, sconfirm, simage);
                 returns = "Login Berhasil";
             }

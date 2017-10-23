@@ -5,4 +5,16 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="placeholder_hintusername">Username</string>
+    <string name="placeholder_hintpassword">Password</string>
+    <string name="placeholder_textkosong">Tidak Boleh Kosong</string>
+    <string name="placeholder_loginberhasil">Login Berhasil</string>
+    <string name="placeholder_buttonlogin">LOGIN</string>
+    <string name="placeholder_toregister">Belum Punya Akun? Daftar Disini</string>
+    <string name="placeholder_hintnama">Nama</string>
+    <string name="placeholder_hintalamat">Alamat</string>
+    <string name="placeholder_hintnotelp">Nomor Telephone</string>
+    <string name="placeholder_buttonregister">Daftar</string>
+    <string name="placeholder_tologin">Sudah Punya Akun? Login disini</string>
+    <string name="placeholder_logout">Logout</string>
 </resources>
