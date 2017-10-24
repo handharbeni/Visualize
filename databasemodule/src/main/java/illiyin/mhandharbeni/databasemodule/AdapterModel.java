@@ -87,11 +87,10 @@ public class AdapterModel implements SessionListener{
     public void syncGrup() throws JSONException {
         GrupModel gm = new GrupModel();
         crud = new Crud(context, gm);
-
         if (!session.getToken().equalsIgnoreCase("nothing")){
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("KEY", session.getToken())
+                    .addFormDataPart("key", session.getToken())
                     .build();
             String response = callHttp.post(endpoint_listgrup, requestBody);
             if (!response.isEmpty() || response != null){
@@ -128,7 +127,7 @@ public class AdapterModel implements SessionListener{
                                     oGm.setDate_end(date_end);
                                     oGm.setPaid(Integer.valueOf(paid));
                                     oGm.setDeleted(deleted);
-                                    oGm.setKuota_free(Integer.valueOf(kuota_free));
+                                    oGm.setKuota_free(Integer.valueOf(kuota_free.split("#")[1]));
                                     oGm.setSha(sha);
                                     crud.update(oGm);
                                     crud.commitObject();
@@ -144,7 +143,7 @@ public class AdapterModel implements SessionListener{
                                 nGm.setDate_end(date_end);
                                 nGm.setPaid(Integer.valueOf(paid));
                                 nGm.setDeleted(deleted);
-                                nGm.setKuota_free(Integer.valueOf(kuota_free));
+                                nGm.setKuota_free(Integer.valueOf(kuota_free.split("#")[1]));
                                 nGm.setSha(sha);
                                 crud.create(nGm);
                             }
@@ -162,7 +161,7 @@ public class AdapterModel implements SessionListener{
         if (!session.getToken().equalsIgnoreCase("nothing")){
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("KEY", session.getToken())
+                    .addFormDataPart("key", session.getToken())
                     .build();
             String response = callHttp.post(endpoint_getchatgrup, requestBody);
             if (!response.isEmpty() || response != null){
@@ -225,7 +224,7 @@ public class AdapterModel implements SessionListener{
         if (!session.getToken().equalsIgnoreCase("nothing")){
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("KEY", session.getToken())
+                    .addFormDataPart("key", session.getToken())
                     .build();
             String response = callHttp.post(endpoint_listcontact, requestBody);
             if (!response.isEmpty() || response != null){
@@ -245,7 +244,7 @@ public class AdapterModel implements SessionListener{
                             String sha = objectData.getString("sha");
                             RealmResults results = crud.read("id", Integer.valueOf(id));
                             if (results.size() > 0){
-                                ContactModel oCm = (ContactModel) results.get(i);
+                                ContactModel oCm = (ContactModel) results.get(0);
                                 if (!oCm.getSha().equalsIgnoreCase(sha)){
                                     /*do update*/
                                     crud.openObject();

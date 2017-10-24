@@ -15,6 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
+import illiyin.mhandharbeni.databasemodule.ChatModel;
+import illiyin.mhandharbeni.databasemodule.ContactModel;
+import illiyin.mhandharbeni.databasemodule.GrupModel;
+import illiyin.mhandharbeni.databasemodule.MemberModel;
+import illiyin.mhandharbeni.realmlibrary.Crud;
+import illiyin.mhandharbeni.servicemodule.ServiceAdapter;
 import illiyin.mhandharbeni.sessionlibrary.Session;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.MainNav;
@@ -27,22 +33,29 @@ public class NavActivity extends AppCompatActivity
     private NavigationView navigationView;
 
     private Session session;
+    private GrupModel grupModel;
+    private Crud crud;
     private AdapterModel adapterModel;
+
+    private ServiceAdapter serviceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fetch_modul();
+        fetch_services();
 
         setContentView(R.layout.activity_nav);
-
 
         fetch_toolbar();
         fetch_menu();
 
         init_first();
     }
-
+    private void fetch_services(){
+        serviceAdapter = new ServiceAdapter(getApplicationContext());
+        serviceAdapter.startService();
+    }
     private void init_first(){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.navframe, new MainNav());
@@ -72,6 +85,8 @@ public class NavActivity extends AppCompatActivity
             }
         });
         adapterModel = new AdapterModel(getApplicationContext());
+        grupModel = new GrupModel();
+        crud = new Crud(getApplicationContext(), grupModel);
     }
 
     @Override
@@ -113,6 +128,10 @@ public class NavActivity extends AppCompatActivity
 
         if (id == R.id.nav_logout){
             /*do logout*/
+            crud.deleteAll(GrupModel.class);
+            crud.deleteAll(ContactModel.class);
+            crud.deleteAll(ChatModel.class);
+            crud.deleteAll(MemberModel.class);
             session.deleteSession();
             startActivity(new Intent(NavActivity.this, MainActivity.class));
             finish();
