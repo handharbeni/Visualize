@@ -3,16 +3,25 @@ package illiyin.mhandharbeni.visualize;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+
+import org.json.JSONException;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.databasemodule.ChatModel;
@@ -28,6 +37,7 @@ import illiyin.mhandharbeni.visualize.navpackage.mainnav.MainNav;
 public class NavActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "NavActivity";
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -36,6 +46,7 @@ public class NavActivity extends AppCompatActivity
     private GrupModel grupModel;
     private Crud crud;
     private AdapterModel adapterModel;
+    private MaterialDialog dialogGrup, dialogContact;
 
     private ServiceAdapter serviceAdapter;
 
@@ -62,18 +73,18 @@ public class NavActivity extends AppCompatActivity
         ft.commit();
     }
     private void fetch_toolbar(){
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
     private void fetch_menu(){
-        drawer = findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -91,7 +102,7 @@ public class NavActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -107,13 +118,13 @@ public class NavActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.add_group) {
+            modalAddGrup();
+            return true;
+        }else if(id == R.id.add_contact){
+            modalAddContact();
             return true;
         }
 
@@ -137,8 +148,60 @@ public class NavActivity extends AppCompatActivity
             finish();
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void modalAddGrup(){
+        dialogGrup = new MaterialDialog.Builder(this)
+                .title(R.string.placeholder_hintcreategrup)
+                .customView(R.layout.__navactivity_mainnav_addgroup, true)
+                .positiveText(R.string.placeholder_buttoncreategrup)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        addGrup();
+                    }
+                })
+                .build();
+        dialogGrup.show();
+    }
+
+    private void addGrup(){
+        View v = dialogGrup.getCustomView();
+        EditText nama = v.findViewById(R.id.namagrup);
+        EditText masaaktif = v.findViewById(R.id.masaaktifgrup);
+        try {
+            String response = adapterModel.create_grup(nama.getText().toString(), masaaktif.getText().toString());
+            Log.d(TAG, "addGrup: "+response);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void modalAddContact(){
+        dialogContact = new MaterialDialog.Builder(this)
+                .title(R.string.placeholder_hintcreategrup)
+                .customView(R.layout.__navactivity_mainnav_addcontact, true)
+                .positiveText(R.string.placeholder_buttonaddcontact)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        addContact();
+                    }
+                })
+                .build();
+        dialogContact.show();
+    }
+
+    private void addContact(){
+        View v = dialogContact.getCustomView();
+        EditText notelp = v.findViewById(R.id.notelpcontact);
+        try {
+            adapterModel.add_contact(notelp.getText().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -17,4 +17,22 @@
     <string name="placeholder_buttonregister">Daftar</string>
     <string name="placeholder_tologin">Sudah Punya Akun? Login disini</string>
     <string name="placeholder_logout">Logout</string>
+
+    <string name="placeholder_hintcreategrup">Buat Grup Baru</string>
+    <string name="placeholder_hintnamagrup">Nama Grup</string>
+    <string name="placeholder_hintprefillgrup"></string>
+    <string name="placeholder_hintnamakontak">Nama Kontak</string>
+    <string name="placeholder_hintmasaaktifgrup">Masa Aktif Grup</string>
+    <string name="placeholder_buttoncreategrup">Buat</string>
+    <string name="placeholder_buttonaddcontact">Tambah Kontak</string>
+    <string name="placeholder_updategrup">Update Grup</string>
+    <string name="placeholder_hapusgrup">Hapus Grup</string>
+    <string name="title_activity_detail_group">DetailGroup</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="placeholder_memberlist">Daftar Member</string>
+    <string name="placeholder_peta">Peta</string>
+    <string name="placeholder_pesan">Pesan</string>
+    <string name="placeholder_locationlist">Daftar Lokasi</string>
 </resources>

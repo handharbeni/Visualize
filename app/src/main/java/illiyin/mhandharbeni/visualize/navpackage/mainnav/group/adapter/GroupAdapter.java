@@ -1,17 +1,22 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
+import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.databasemodule.GrupModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.sessionlibrary.Session;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
 import illiyin.mhandharbeni.visualize.R;
+import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.DetailGroup;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
@@ -24,6 +29,8 @@ public class GroupAdapter extends RealmBasedRecyclerViewAdapter<GrupModel, Group
     private Session session;
     private GrupModel grupModel;
     private Crud crud;
+    private AdapterModel adapterModel;
+
     @Override
     public GroupAdapter.MyViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int i) {
         View v = inflater.inflate(R.layout.__navactivity_mainnav_itemlist, viewGroup, false);
@@ -33,9 +40,21 @@ public class GroupAdapter extends RealmBasedRecyclerViewAdapter<GrupModel, Group
     @Override
     public void onBindRealmViewHolder(final GroupAdapter.MyViewHolder myViewHolder, final int i) {
         final GrupModel m = realmResults.get(i);
-//        Glide.with(getContext()).load(m.get)
         myViewHolder.title.setText(m.getNama_grup());
-        myViewHolder.subtitle.setVisibility(View.GONE);
+        myViewHolder.subtitle.setVisibility(View.INVISIBLE);
+        myViewHolder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent i = new Intent(getContext(), DetailGroup.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getContext().startActivity(i);
+                    adapterModel.konfirmasi_masuk_grup(String.valueOf(m.getId()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -59,5 +78,6 @@ public class GroupAdapter extends RealmBasedRecyclerViewAdapter<GrupModel, Group
         session = new Session(getContext(), this);
         grupModel = new GrupModel();
         crud = new Crud(getContext(), grupModel);
+        adapterModel = new AdapterModel(getContext());
     }
 }

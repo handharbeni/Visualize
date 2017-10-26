@@ -18,6 +18,9 @@ public class SplashActivity extends AppCompatActivity implements SessionListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = new Session(getApplicationContext(), this);
+
+        setContentView(R.layout.splash_view);
+
         if (session.getStateLogin().equalsIgnoreCase("true")){
             startActivity(new Intent(SplashActivity.this, NavActivity.class));
         }else{

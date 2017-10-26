@@ -20,7 +20,7 @@ import illiyin.mhandharbeni.servicemodule.service.intentservice.GrupService;
 
 public class MainService extends Service {
     public static Boolean serviceRunning = false;
-    public static final long NOTIFY_INTERVAL = 15 * 1000;
+    public static final long NOTIFY_INTERVAL = 2 * 1000;
     private Handler handler = new Handler();
     private Timer timer = null;
 

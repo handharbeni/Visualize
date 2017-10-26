@@ -313,6 +313,9 @@ public class AdapterModel implements SessionListener{
         String returns = "Pendaftaran Gagal";
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("nama", nama)
+                .addFormDataPart("alamat", alamat)
+                .addFormDataPart("no_telp", no_telp)
                 .addFormDataPart("email", email)
                 .addFormDataPart("password", password)
                 .build();
@@ -328,8 +331,8 @@ public class AdapterModel implements SessionListener{
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("key", session.getToken())
-                .addFormDataPart("email", namagrup)
-                .addFormDataPart("password", masaaktif)
+                .addFormDataPart("namagrup", namagrup)
+                .addFormDataPart("masaaktif", masaaktif)
                 .build();
         String response = callHttp.post(endpoint_creategrup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
@@ -423,7 +426,7 @@ public class AdapterModel implements SessionListener{
         String response = callHttp.post(endpoint_konfimasimasukgrup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
-            returns = "Pesan anda terkirim.";
+            returns = "Konfirmasi sukses.";
         }
         return returns;
     }
