@@ -22,6 +22,11 @@ public class DetailGroup extends AppCompatActivity {
 
     private AdapterModel adapterModel;
 
+    private Integer id;
+
+    private Fragment fragment;
+    private Bundle bundleFragment;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -29,16 +34,32 @@ public class DetailGroup extends AppCompatActivity {
         public boolean onNavigationItemSelected(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_member:
-                    changeFragment(new MemberList());
+                    fragment = new MemberList();
+                    bundleFragment = new Bundle();
+                    bundleFragment.putInt("id", id);
+                    fragment.setArguments(bundleFragment);
+                    changeFragment(fragment);
                     return true;
                 case R.id.navigation_maps:
-                    changeFragment(new MapsList());
+                    fragment = new MapsList();
+                    bundleFragment = new Bundle();
+                    bundleFragment.putInt("id", id);
+                    fragment.setArguments(bundleFragment);
+                    changeFragment(fragment);
                     return true;
                 case R.id.navigation_chat:
-                    changeFragment(new ChatList());
+                    fragment = new ChatList();
+                    bundleFragment = new Bundle();
+                    bundleFragment.putInt("id", id);
+                    fragment.setArguments(bundleFragment);
+                    changeFragment(fragment);
                     return true;
                 case R.id.navigation_lokasi:
-                    changeFragment(new ChatList());
+                    fragment = new ChatList();
+                    bundleFragment = new Bundle();
+                    bundleFragment.putInt("id", id);
+                    fragment.setArguments(bundleFragment);
+                    changeFragment(fragment);
                     return true;
             }
             return false;
@@ -49,11 +70,18 @@ public class DetailGroup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fetch_modul();
-
+        fetch_extras();
         setContentView(R.layout.__navactivity_mainnav_layout_detailgroup);
         fetch_element();
         fetch_event();
         fetch_startup();
+    }
+
+    private void fetch_extras(){
+        Bundle b = getIntent().getExtras();
+        id = 0;
+        if(b != null)
+            id = b.getInt("id");
     }
 
     private void fetch_modul(){

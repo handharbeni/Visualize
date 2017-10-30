@@ -27,6 +27,7 @@ import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.databasemodule.ChatModel;
 import illiyin.mhandharbeni.databasemodule.ContactModel;
 import illiyin.mhandharbeni.databasemodule.GrupModel;
+import illiyin.mhandharbeni.databasemodule.MemberLocationModel;
 import illiyin.mhandharbeni.databasemodule.MemberModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.servicemodule.ServiceAdapter;
@@ -143,6 +144,7 @@ public class NavActivity extends AppCompatActivity
             crud.deleteAll(ContactModel.class);
             crud.deleteAll(ChatModel.class);
             crud.deleteAll(MemberModel.class);
+            crud.deleteAll(MemberLocationModel.class);
             session.deleteSession();
             startActivity(new Intent(NavActivity.this, MainActivity.class));
             finish();

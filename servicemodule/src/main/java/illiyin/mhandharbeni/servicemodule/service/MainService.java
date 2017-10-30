@@ -13,6 +13,8 @@ import java.util.TimerTask;
 import illiyin.mhandharbeni.servicemodule.service.intentservice.ChatService;
 import illiyin.mhandharbeni.servicemodule.service.intentservice.ContactService;
 import illiyin.mhandharbeni.servicemodule.service.intentservice.GrupService;
+import illiyin.mhandharbeni.servicemodule.service.intentservice.ListMemberLocation;
+import illiyin.mhandharbeni.servicemodule.service.intentservice.ListMemberService;
 
 /**
  * Created by root on 17/07/17.
@@ -74,6 +76,14 @@ public class MainService extends Service {
                     }
                     if (!checkIsRunning(GrupService.class)){
                         Intent is = new Intent(getBaseContext(), GrupService.class);
+                        startService(is);
+                    }
+                    if (!checkIsRunning(ListMemberService.class)){
+                        Intent is = new Intent(getBaseContext(), ListMemberService.class);
+                        startService(is);
+                    }
+                    if (!checkIsRunning(ListMemberLocation.class)){
+                        Intent is = new Intent(getBaseContext(), ListMemberLocation.class);
                         startService(is);
                     }
                 }

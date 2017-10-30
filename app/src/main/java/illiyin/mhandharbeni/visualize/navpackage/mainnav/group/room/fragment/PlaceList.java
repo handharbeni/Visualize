@@ -22,10 +22,12 @@ public class PlaceList extends Fragment {
 
     private Crud crud;
     private ChatModel chatModel;
+    private Integer id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fetch_modul();
+        fetch_extras();
         v = inflater.inflate(R.layout.__navactivity_mainnav_layout_group_listplace, container, false);
 
         fetch_element();
@@ -41,6 +43,10 @@ public class PlaceList extends Fragment {
 
     private void fetch_element(){
         listchat = v.findViewById(R.id.listchat);
+    }
+    private void fetch_extras(){
+        Bundle args = getArguments();
+        id = args.getInt("id", 0);
     }
 
     private void fetch_adapter(){

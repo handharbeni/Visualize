@@ -32,6 +32,10 @@ public class Crud {
     public RealmResults read(String key, String value){
         return crudRealm.read(key, value);
     }
+    public Crud reads(String key, Integer value){
+        read(key,value);
+        return this;
+    }
     public RealmResults read(String key, String[] value){
         return crudRealm.read(key, value);
     }

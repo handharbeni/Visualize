@@ -2,6 +2,7 @@ package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -41,22 +42,36 @@ public class GroupAdapter extends RealmBasedRecyclerViewAdapter<GrupModel, Group
     public void onBindRealmViewHolder(final GroupAdapter.MyViewHolder myViewHolder, final int i) {
         final GrupModel m = realmResults.get(i);
         myViewHolder.title.setText(m.getNama_grup());
-        myViewHolder.subtitle.setVisibility(View.INVISIBLE);
-        myViewHolder.image.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Intent i = new Intent(getContext(), DetailGroup.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getContext().startActivity(i);
-                    adapterModel.konfirmasi_masuk_grup(String.valueOf(m.getId()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                gotoDetail(m.getId());
+            }
+        });
+        myViewHolder.subtitle.setVisibility(View.INVISIBLE);
+        myViewHolder.listparent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoDetail(m.getId());
             }
         });
     }
+    private void gotoDetail(Integer id){
+        try {
+            Bundle b = new Bundle();
+            b.putInt("id", id);
 
+            Intent i = new Intent(getContext(), DetailGroup.class);
+
+            i.putExtras(b);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            getContext().startActivity(i);
+            adapterModel.konfirmasi_masuk_grup(String.valueOf(id));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public void sessionChange() {
 

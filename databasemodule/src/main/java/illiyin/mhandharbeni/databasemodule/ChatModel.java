@@ -13,6 +13,11 @@ public class ChatModel extends RealmObject {
 
     int id_grup;
     int id_user;
+
+    String nama_user;
+    String image_user;
+    String nama_grup;
+
     String type;
     String text;
     String deleted;
@@ -22,10 +27,13 @@ public class ChatModel extends RealmObject {
     public ChatModel() {
     }
 
-    public ChatModel(int id, int id_grup, int id_user, String type, String text, String deleted, String date_add, String sha) {
+    public ChatModel(int id, int id_grup, int id_user, String nama_user, String image_user, String nama_grup, String type, String text, String deleted, String date_add, String sha) {
         this.id = id;
         this.id_grup = id_grup;
         this.id_user = id_user;
+        this.nama_user = nama_user;
+        this.image_user = image_user;
+        this.nama_grup = nama_grup;
         this.type = type;
         this.text = text;
         this.deleted = deleted;
@@ -95,5 +103,29 @@ public class ChatModel extends RealmObject {
 
     public void setSha(String sha) {
         this.sha = sha;
+    }
+
+    public String getNama_user() {
+        return nama_user;
+    }
+
+    public void setNama_user(String nama_user) {
+        this.nama_user = nama_user;
+    }
+
+    public String getImage_user() {
+        return image_user;
+    }
+
+    public void setImage_user(String image_user) {
+        this.image_user = image_user;
+    }
+
+    public String getNama_grup() {
+        return nama_grup;
+    }
+
+    public void setNama_grup(String nama_grup) {
+        this.nama_grup = nama_grup;
     }
 }

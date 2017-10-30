@@ -6,5 +6,7 @@
         <service android:name=".service.intentservice.ContactService"/>
         <service android:name=".service.intentservice.ChatService"/>
         <service android:name=".service.intentservice.GrupService"/>
+        <service android:name=".service.intentservice.ListMemberService"/>
+        <service android:name=".service.intentservice.ListMemberLocation"/>
     </application>
 </manifest>
