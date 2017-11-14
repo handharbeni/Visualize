@@ -39,27 +39,31 @@ public class ChatAdapter extends RealmBasedRecyclerViewAdapter<ChatModel, ChatAd
     public void onBindRealmViewHolder(final ChatAdapter.MyViewHolder myViewHolder, final int i) {
         final ChatModel m = realmResults.get(i);
         String nama = session.getCustomParams("NAMA", "nothing");
-//        if (m.getNama_user().equalsIgnoreCase(nama)){
-//            /*layoutme*/
-//            myViewHolder.layoutfrom.setVisibility(View.GONE);
-//        }else{
-//            /*layoutfrom*/
-//            myViewHolder.layoutme.setVisibility(View.GONE);
-//        }
-        myViewHolder.contentmessage.setText(m.getText());
-        Glide.with(getContext()).load(m.getImage_user()).into(myViewHolder.imagemessage);
+        if (m.getNama_user().equalsIgnoreCase(nama)){
+            /*layoutme*/
+            myViewHolder.layoutfrom.setVisibility(View.GONE);
+            myViewHolder.contentmessageleft.setText(m.getText());
+            Glide.with(getContext()).load(m.getImage_user()).into(myViewHolder.imagemessageleft);
+        }else{
+            /*layoutfrom*/
+            myViewHolder.layoutme.setVisibility(View.GONE);
+            myViewHolder.contentmessageright.setText(m.getText());
+            Glide.with(getContext()).load(m.getImage_user()).into(myViewHolder.imagemessageright);
+        }
 
     }
     public class MyViewHolder extends RealmViewHolder {
         LinearLayout layoutfrom, layoutme;
-        ImageView imagemessage;
-        TextView contentmessage;
+        ImageView imagemessageleft, imagemessageright;
+        TextView contentmessageleft, contentmessageright;
         public MyViewHolder(LinearLayout container) {
             super(container);
             this.layoutfrom= container.findViewById(R.id.layoutfrom);
             this.layoutme = container.findViewById(R.id.layoutme);
-            this.imagemessage = container.findViewById(R.id.imagemessage);
-            this.contentmessage = container.findViewById(R.id.contentmessage);
+            this.imagemessageleft = container.findViewById(R.id.imagemessageleft);
+            this.imagemessageright = container.findViewById(R.id.imagemessageright);
+            this.contentmessageleft = container.findViewById(R.id.contentmessageleft);
+            this.contentmessageright = container.findViewById(R.id.contentmessageright);
         }
     }
     public ChatAdapter(Context context, RealmResults<ChatModel> realmResults, boolean automaticUpdate) {

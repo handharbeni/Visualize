@@ -1,22 +1,42 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
+import org.json.JSONException;
+
+import java.lang.reflect.Field;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
+import illiyin.mhandharbeni.databasemodule.GrupModel;
+import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.visualize.R;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.ChatList;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MapsList;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MemberList;
+import io.realm.RealmResults;
 
 public class DetailGroup extends AppCompatActivity {
-    private BottomNavigationView navigation;
+    private static final String TAG = "DetailGrup";
+    private BottomNavigationViewEx navigation;
 
     private FrameLayout detailmainframe;
 
@@ -27,6 +47,10 @@ public class DetailGroup extends AppCompatActivity {
     private Fragment fragment;
     private Bundle bundleFragment;
 
+    private FloatingActionButton fabinvitemember, fabsendmessage, fabaddlocation;
+
+    private MaterialDialog dialogInvite, dialogSendChat, dialogAddLocation;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -34,6 +58,8 @@ public class DetailGroup extends AppCompatActivity {
         public boolean onNavigationItemSelected(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_member:
+                    hideAllFab();
+                    fabinvitemember.show();
                     fragment = new MemberList();
                     bundleFragment = new Bundle();
                     bundleFragment.putInt("id", id);
@@ -41,6 +67,7 @@ public class DetailGroup extends AppCompatActivity {
                     changeFragment(fragment);
                     return true;
                 case R.id.navigation_maps:
+                    hideAllFab();
                     fragment = new MapsList();
                     bundleFragment = new Bundle();
                     bundleFragment.putInt("id", id);
@@ -48,6 +75,8 @@ public class DetailGroup extends AppCompatActivity {
                     changeFragment(fragment);
                     return true;
                 case R.id.navigation_chat:
+                    hideAllFab();
+                    fabsendmessage.show();
                     fragment = new ChatList();
                     bundleFragment = new Bundle();
                     bundleFragment.putInt("id", id);
@@ -55,6 +84,8 @@ public class DetailGroup extends AppCompatActivity {
                     changeFragment(fragment);
                     return true;
                 case R.id.navigation_lokasi:
+                    hideAllFab();
+                    fabaddlocation.show();
                     fragment = new ChatList();
                     bundleFragment = new Bundle();
                     bundleFragment.putInt("id", id);
@@ -72,32 +103,154 @@ public class DetailGroup extends AppCompatActivity {
         fetch_modul();
         fetch_extras();
         setContentView(R.layout.__navactivity_mainnav_layout_detailgroup);
+        fetch_title();
         fetch_element();
         fetch_event();
         fetch_startup();
     }
-
+    private void invite_member(){
+        dialogInvite = new MaterialDialog.Builder(this)
+                .title(R.string.placeholder_invitemember)
+                .customView(R.layout.__navactivity_mainnav_invitemember, true)
+                .positiveText(R.string.placeholder_kirim)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        doInvite();
+                    }
+                })
+                .build();
+        dialogInvite.show();
+    }
+    private void doInvite(){
+        View v = dialogInvite.getCustomView();
+        EditText notelp = v.findViewById(R.id.notelpcontact);
+        try {
+            String response = adapterModel.invite_member(String.valueOf(id), notelp.getText().toString());
+            Log.d(TAG, "addGrup: "+response);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void send_message(){
+        dialogSendChat = new MaterialDialog.Builder(this)
+                .title(R.string.placeholder_sendmessage)
+                .customView(R.layout.__navactivity_mainnav_sendmessage, true)
+                .positiveText(R.string.placeholder_kirim)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        doSend();
+                    }
+                })
+                .build();
+        dialogSendChat.show();
+    }
+    private void doSend(){
+        View v = dialogSendChat.getCustomView();
+        EditText message = v.findViewById(R.id.sendmessage);
+        try {
+            String response = adapterModel.send_message(String.valueOf(id), message.getText().toString());
+            Log.d(TAG, "doSend: "+response);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void add_location(){
+        dialogAddLocation = new MaterialDialog.Builder(this)
+                .title(R.string.placeholder_adddestination)
+                .customView(R.layout.__navactivity_mainnav_addlocation, true)
+                .positiveText(R.string.placeholder_kirim)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    }
+                })
+                .build();
+        dialogAddLocation.show();
+    }
+    private void fetch_title(){
+        GrupModel gm = new GrupModel();
+        Crud crud = new Crud(this, gm);
+        RealmResults results = crud.read("id", id);
+        GrupModel getData = (GrupModel) results.get(0);
+        getSupportActionBar().setTitle(getData.getNama_grup());
+    }
     private void fetch_extras(){
         Bundle b = getIntent().getExtras();
         id = 0;
         if(b != null)
             id = b.getInt("id");
-    }
 
+    }
+    @SuppressLint("RestrictedApi")
+    public static void disableShiftMode(BottomNavigationView view) {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
+        try {
+            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(menuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                item.setShiftingMode(false);
+                // set once again checked value, so view will be updated
+                item.setChecked(item.getItemData().isChecked());
+            }
+        } catch (NoSuchFieldException e) {
+            //Timber.e(e, "Unable to get shift mode field");
+        } catch (IllegalAccessException e) {
+            //Timber.e(e, "Unable to change value of shift mode");
+        }
+    }
     private void fetch_modul(){
         adapterModel = new AdapterModel(getApplicationContext());
-
     }
 
     private void fetch_element(){
+        fabinvitemember = (FloatingActionButton) findViewById(R.id.fabinvitemember);
+        fabsendmessage = (FloatingActionButton) findViewById(R.id.fabsendmessage);
+        fabaddlocation = (FloatingActionButton) findViewById(R.id.fabaddlocation);
+        hideAllFab();
+
         detailmainframe = (FrameLayout) findViewById(R.id.detailmainframe);
 
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
+        navigation.enableAnimation(false);
+        navigation.enableItemShiftingMode(false);
+        navigation.enableShiftingMode(false);
+
+        navigation.setTextSize(12);
+//        disableShiftMode(navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
     }
 
     private void fetch_event(){
+        fabinvitemember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                invite_member();
+            }
+        });
+        fabsendmessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                send_message();
+            }
+        });
+        fabaddlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                add_location();
+            }
+        });
+    }
 
+    private void hideAllFab(){
+        fabinvitemember.hide();
+        fabsendmessage.hide();
+        fabaddlocation.hide();
     }
 
     private void fetch_startup(){

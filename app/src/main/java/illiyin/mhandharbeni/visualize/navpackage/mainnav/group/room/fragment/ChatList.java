@@ -2,6 +2,7 @@ package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.adapter.Chat
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.adapter.MemberAdapter;
 import io.realm.RealmResults;
 import io.realm.Sort;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by root on 10/26/17.
@@ -57,7 +60,9 @@ public class ChatList extends Fragment {
     }
 
     private void fetch_adapter(){
-        RealmResults memberResults = crud.readSorted("id_grup", id, "id", Sort.DESCENDING);
+        RealmResults memberResults = crud.read();
+        Log.d(TAG, "fetch_adapter: Result Size "+String.valueOf(memberResults.size()));
+//        RealmResults memberResults = crud.readSorted("id_grup", id, "id", Sort.DESCENDING);
         chatAdapter = new ChatAdapter(getActivity().getApplicationContext(), memberResults, true);
         listchat.setAdapter(chatAdapter);
     }

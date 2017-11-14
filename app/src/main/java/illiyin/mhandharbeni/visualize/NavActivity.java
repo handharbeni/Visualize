@@ -148,6 +148,10 @@ public class NavActivity extends AppCompatActivity
             session.deleteSession();
             startActivity(new Intent(NavActivity.this, MainActivity.class));
             finish();
+        }else if (id == R.id.add_group){
+            modalAddGrup();
+        }else if(id == R.id.add_contact){
+            modalAddContact();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -2,7 +2,6 @@ package illiyin.mhandharbeni.databasemodule;
 
 import android.content.Context;
 import android.os.StrictMode;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,8 +14,6 @@ import illiyin.mhandharbeni.sessionlibrary.SessionListener;
 import io.realm.RealmResults;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by root on 17/07/17.
@@ -39,6 +36,8 @@ public class AdapterModel implements SessionListener{
     private String endpoint_getchatgrup;
     private String endpoint_addcontact;
     private String endpoint_sentchat;
+    private String endpoint_sentlocationgroup;
+    private String endpoint_getlocationgroup;
 
     private String endpoint_login;
     private String endpoint_register;
@@ -77,11 +76,88 @@ public class AdapterModel implements SessionListener{
         endpoint_login = server+""+context.getString(R.string.endpoint_login);
         endpoint_register = server+""+context.getString(R.string.endpoint_register);
         endpoint_addcontact= server+""+context.getString(R.string.endpoint_addcontact);
-
+        endpoint_sentlocationgroup = server+context.getString(R.string.endpoint_setlocation);
+        endpoint_getlocationgroup = server+context.getString(R.string.endpoint_getlocation);
     }
     @Override
     public void sessionChange() {
 
+    }
+    public void syncDestinationGroup() throws JSONException {
+        GrupModel gm= new GrupModel();
+        Crud crudGrup = new Crud(context, gm);
+        if (!session.getToken().equalsIgnoreCase("nothing")){
+            RealmResults readAllGrup = crudGrup.read();
+            if (readAllGrup.size() > 0){
+                for (int i=0;i<readAllGrup.size();i++){
+                    GrupModel newGM = (GrupModel) readAllGrup.get(i);
+                    RequestBody requestBody = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("key", session.getToken())
+                            .addFormDataPart("id_grup", String.valueOf(newGM.getId()))
+                            .build();
+                    String response = callHttp.post(endpoint_getlocationgroup, requestBody);
+                    if (!response.isEmpty() || response != null){
+                        JSONObject objectResponse = new JSONObject(response);
+                        if (objectResponse.getInt("code")==300){
+                            JSONArray arrayData = objectResponse.getJSONArray("data");
+                            if (arrayData.length() > 0){
+                                for (int k=0;k<arrayData.length();k++){
+                                    JSONObject objectData = arrayData.getJSONObject(k);
+
+                                    String id = objectData.getString("id");
+                                    String id_grup = objectData.getString("id_grup");
+                                    String nama_lokasi = objectData.getString("nama_lokasi");
+                                    String latitude = objectData.getString("latitude");
+                                    String longitude = objectData.getString("longitude");
+                                    String prioritas = objectData.getString("prioritas");
+                                    String type = objectData.getString("type");
+                                    String date_add = objectData.getString("date_add");
+                                    String date_modified = objectData.getString("date_modified");
+                                    String sha = objectData.getString("sha");
+
+                                    GrupLocationModel glm = new GrupLocationModel();
+                                    Crud crudGlm = new Crud(context, glm);
+                                    RealmResults resultGLM = crudGlm.read("id", Integer.valueOf(id));
+                                    if (resultGLM.size() > 0){
+                                        /*update*/
+                                        GrupLocationModel objGLM = (GrupLocationModel) resultGLM.get(0);
+                                        if (!objGLM.getSha().equalsIgnoreCase(sha)){
+                                            crudGlm.openObject();
+                                            objGLM.setLatitude(latitude);
+                                            objGLM.setLongitude(longitude);
+                                            objGLM.setNama_lokasi(nama_lokasi);
+                                            objGLM.setPrioritas(Integer.valueOf(prioritas));
+                                            objGLM.setType(type);
+                                            objGLM.setDate_add(date_add);
+                                            objGLM.setDate_modified(date_modified);
+                                            objGLM.setSha(sha);
+                                            crudGlm.update(objGLM);
+                                            crudGlm.commitObject();
+                                        }
+                                    }else{
+                                        /*insert*/
+                                        glm.setId(Integer.valueOf(id));
+                                        glm.setId_grup(Integer.valueOf(id_grup));
+                                        glm.setLatitude(latitude);
+                                        glm.setLongitude(longitude);
+                                        glm.setNama_lokasi(nama_lokasi);
+                                        glm.setPrioritas(Integer.valueOf(prioritas));
+                                        glm.setType(type);
+                                        glm.setDate_add(date_add);
+                                        glm.setDate_modified(date_modified);
+                                        glm.setSha(sha);
+                                        crudGlm.create(glm);
+                                    }
+                                    crudGlm.closeRealm();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        crudGrup.closeRealm();
     }
     public void syncGrup() throws JSONException {
         GrupModel gm = new GrupModel();
@@ -185,7 +261,7 @@ public class AdapterModel implements SessionListener{
 
                                     MemberModel mm = new MemberModel();
                                     Crud crudMM = new Crud(context, mm);
-                                    RealmResults resultMM = crudMM.reads("id_grup", Integer.valueOf(id_grup)).read("id", Integer.valueOf(id));
+                                    RealmResults resultMM = crudMM.read("id", Integer.valueOf(id_grup+""+id));
                                     if (resultMM.size() > 0){
                                         /*update*/
                                         MemberModel updateMM = (MemberModel) resultMM.get(0);
@@ -201,10 +277,10 @@ public class AdapterModel implements SessionListener{
                                             crudMM.commitObject();
                                         }
                                     }else{
-                                        /*insert*/
                                         MemberModel newMM = new MemberModel();
+                                        newMM.setId(Integer.valueOf(id_grup+""+id));
                                         newMM.setId_grup(Integer.valueOf(id_grup));
-                                        newMM.setId(Integer.valueOf(id));
+                                        newMM.setId_user(Integer.valueOf(id));
                                         newMM.setNama(nama);
                                         newMM.setAlamat(alamat);
                                         newMM.setNo_telp(no_telp);
@@ -247,18 +323,20 @@ public class AdapterModel implements SessionListener{
                                     String id = objectData.getString("id");
                                     String id_grup = objectData.getString("id_grup");
                                     String nama = objectData.getString("nama");
+                                    String image = objectData.getString("image");
                                     String latitude = objectData.getString("latitude");
                                     String longitude = objectData.getString("longitude");
                                     String sha = objectData.getString("sha");
                                     MemberLocationModel mlm = new MemberLocationModel();
                                     Crud crudMLM = new Crud(context, mlm);
-                                    RealmResults resultsMLM = crudMLM.reads("id_grup", Integer.valueOf(id_grup)).read("id", Integer.valueOf(id));
+                                    RealmResults resultsMLM = crudMLM.read("id", Integer.valueOf(id_grup+""+id));
                                     if (resultsMLM.size() > 0){
                                         /*update*/
                                         MemberLocationModel updateLocation = (MemberLocationModel) resultsMLM.get(0);
                                         if (!updateLocation.getSha().equalsIgnoreCase(sha)){
                                             crudMLM.openObject();
                                             updateLocation.setNama(nama);
+                                            updateLocation.setImage(image);
                                             updateLocation.setLatitude(latitude);
                                             updateLocation.setLongitude(longitude);
                                             updateLocation.setSha(sha);
@@ -269,9 +347,11 @@ public class AdapterModel implements SessionListener{
                                     }else{
                                         /*insert*/
                                         MemberLocationModel newMLM = new MemberLocationModel();
-                                        newMLM.setId(Integer.valueOf(id));
+                                        newMLM.setId(Integer.valueOf(id_grup+""+id));
                                         newMLM.setId_grup(Integer.valueOf(id_grup));
+                                        newMLM.setId_user(Integer.valueOf(id));
                                         newMLM.setNama(nama);
+                                        newMLM.setImage(image);
                                         newMLM.setLatitude(latitude);
                                         newMLM.setLongitude(longitude);
                                         newMLM.setSha(sha);
@@ -290,74 +370,83 @@ public class AdapterModel implements SessionListener{
     public void syncChat() throws JSONException {
         ChatModel cm = new ChatModel();
         crud = new Crud(context, cm);
-
         if (!session.getToken().equalsIgnoreCase("nothing")){
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("key", session.getToken())
-                    .build();
-            String response = callHttp.post(endpoint_getchatgrup, requestBody);
-            if (!response.isEmpty() || response != null){
-                JSONObject objectResponse = new JSONObject(response);
-                if (objectResponse.getInt("code")==300){
-                    /*check data ada atau tidak*/
-                    JSONArray arrayData = objectResponse.getJSONArray("data");
-                    if (arrayData.length() > 0){
-                        for(int i=0;i<arrayData.length();i++){
-                            JSONObject objectArray = arrayData.getJSONObject(i);
-                            String id = objectArray.getString("id");
-                            String id_grup = objectArray.getString("id_grup");
-                            String id_user = objectArray.getString("id_user");
+            GrupModel gm = new GrupModel();
+            Crud crudGrup= new Crud(context, gm);
+            RealmResults crudResults = crudGrup.read();
+            if (crudResults.size()>0){
+                for (int z = 0;z<crudResults.size();z++){
+                    GrupModel ggm = (GrupModel) crudResults.get(z);
+                    RequestBody requestBody = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("key", session.getToken())
+                            .addFormDataPart("id_grup", String.valueOf(ggm.getId()))
+                            .build();
+                    String response = callHttp.post(endpoint_getchatgrup, requestBody);
+                    if (!response.isEmpty() || response != null){
+                        JSONObject objectResponse = new JSONObject(response);
+                        if (objectResponse.getInt("code")==300){
+                            /*check data ada atau tidak*/
+                            JSONArray arrayData = objectResponse.getJSONArray("data");
+                            if (arrayData.length() > 0){
+                                for(int i=0;i<arrayData.length();i++){
+                                    JSONObject objectArray = arrayData.getJSONObject(i);
+                                    String id = objectArray.getString("id");
+                                    String id_grup = objectArray.getString("id_grup");
+                                    String id_user = objectArray.getString("id_user");
 
-                            String nama_user = objectArray.getString("nama_user");
-                            String image_user = objectArray.getString("image_user");
-                            String nama_grup = objectArray.getString("nama_grup");
+                                    String nama_user = objectArray.getString("nama_user");
+                                    String image_user = objectArray.getString("image_user");
+                                    String nama_grup = objectArray.getString("nama_grup");
 
-                            String type = objectArray.getString("type");
-                            String text = objectArray.getString("text");
-                            String deleted = objectArray.getString("deleted");
-                            String date_add = objectArray.getString("date_add");
-                            String sha = objectArray.getString("sha");
-                            RealmResults results = crud.read("id", Integer.valueOf(id));
-                            if (results.size() > 0){
-                                /*check update*/
-                                ChatModel oCm = (ChatModel) results.get(0);
-                                if (!oCm.getSha().equalsIgnoreCase(sha)){
-                                    /*do update*/
-                                    crud.openObject();
-                                    oCm.setId_grup(Integer.valueOf(id_grup));
-                                    oCm.setId_user(Integer.valueOf(id_user));
-                                    oCm.setNama_user(nama_user);
-                                    oCm.setImage_user(image_user);
-                                    oCm.setNama_grup(nama_grup);
-                                    oCm.setType(type);
-                                    oCm.setText(text);
-                                    oCm.setDeleted(deleted);
-                                    oCm.setDate_add(date_add);
-                                    oCm.setSha(sha);
-                                    crud.update(oCm);
-                                    crud.commitObject();
+                                    String type = objectArray.getString("type");
+                                    String text = objectArray.getString("text");
+                                    String deleted = objectArray.getString("deleted");
+                                    String date_add = objectArray.getString("date_add");
+                                    String sha = objectArray.getString("sha");
+                                    RealmResults results = crud.read("id", Integer.valueOf(id));
+                                    if (results.size() > 0){
+                                        /*check update*/
+                                        ChatModel oCm = (ChatModel) results.get(0);
+                                        if (!oCm.getSha().equalsIgnoreCase(sha)){
+                                            /*do update*/
+                                            crud.openObject();
+                                            oCm.setId_grup(Integer.valueOf(id_grup));
+                                            oCm.setId_user(Integer.valueOf(id_user));
+                                            oCm.setNama_user(nama_user);
+                                            oCm.setImage_user(image_user);
+                                            oCm.setNama_grup(nama_grup);
+                                            oCm.setType(type);
+                                            oCm.setText(text);
+                                            oCm.setDeleted(deleted);
+                                            oCm.setDate_add(date_add);
+                                            oCm.setSha(sha);
+                                            crud.update(oCm);
+                                            crud.commitObject();
+                                        }
+                                    }else{
+                                        /*insert new*/
+                                        ChatModel nCm = new ChatModel();
+                                        nCm.setId(Integer.valueOf(id));
+                                        nCm.setId_grup(Integer.valueOf(id_grup));
+                                        nCm.setId_user(Integer.valueOf(id_user));
+                                        nCm.setNama_user(nama_user);
+                                        nCm.setImage_user(image_user);
+                                        nCm.setNama_grup(nama_grup);
+                                        nCm.setType(type);
+                                        nCm.setText(text);
+                                        nCm.setDeleted(deleted);
+                                        nCm.setDate_add(date_add);
+                                        nCm.setSha(sha);
+                                        crud.create(nCm);
+                                    }
                                 }
-                            }else{
-                                /*insert new*/
-                                ChatModel nCm = new ChatModel();
-                                nCm.setId(Integer.valueOf(id));
-                                nCm.setId_grup(Integer.valueOf(id_grup));
-                                nCm.setId_user(Integer.valueOf(id_user));
-                                nCm.setNama_user(nama_user);
-                                nCm.setImage_user(image_user);
-                                nCm.setNama_grup(nama_grup);
-                                nCm.setType(type);
-                                nCm.setText(text);
-                                nCm.setDeleted(deleted);
-                                nCm.setDate_add(date_add);
-                                nCm.setSha(sha);
-                                crud.create(nCm);
                             }
                         }
                     }
                 }
             }
+            crudGrup.closeRealm();
         }
         crud.closeRealm();
     }
@@ -521,9 +610,9 @@ public class AdapterModel implements SessionListener{
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("key", session.getToken())
                 .addFormDataPart("id_grup", id_grup)
-                .addFormDataPart("message", message)
+                .addFormDataPart("pesan", message)
                 .build();
-        String response = callHttp.post(endpoint_login, requestBody);
+        String response = callHttp.post(endpoint_sendmessagegrup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Pesan anda terkirim.";
@@ -538,7 +627,8 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("latitude", latitude)
                 .addFormDataPart("longitude", longitude)
                 .build();
-        String response = callHttp.post(endpoint_login, requestBody);
+        String response = callHttp.post(endpoint_senglocationgrup, requestBody);
+        returns = response;
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Pesan anda terkirim.";
@@ -585,6 +675,25 @@ public class AdapterModel implements SessionListener{
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Pesan add.";
+        }
+        return returns;
+    }
+    public String add_location_grup(String id_grup, String nama_lokasi, String latitude, String longitude, String prioritas, String type) throws JSONException {
+        String returns = "Gagal Menambah Lokasi";
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("key", session.getToken())
+                .addFormDataPart("id_grup", id_grup)
+                .addFormDataPart("nama_lokasi", nama_lokasi)
+                .addFormDataPart("latitude", latitude)
+                .addFormDataPart("longitude", longitude)
+                .addFormDataPart("prioritas", prioritas)
+                .addFormDataPart("type", type)
+                .build();
+        String response = callHttp.post(endpoint_sentlocationgroup, requestBody);
+        JSONObject objectResponse = new JSONObject(response);
+        if (objectResponse.getInt("code")==300){
+            returns = "Lokasi Berhasil Ditambahkan";
         }
         return returns;
     }

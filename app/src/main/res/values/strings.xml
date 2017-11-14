@@ -35,4 +35,10 @@
     <string name="placeholder_peta">Peta</string>
     <string name="placeholder_pesan">Pesan</string>
     <string name="placeholder_locationlist">Daftar Lokasi</string>
+    <string name="placeholder_notelpcontact">Nomor Handphone</string>
+    <string name="placeholder_destinationaddress">Destination Address</string>
+    <string name="placeholder_invitemember">Tambah Member</string>
+    <string name="placeholder_kirim">Simpan</string>
+    <string name="placeholder_sendmessage">Kirim Pesan</string>
+    <string name="placeholder_adddestination">Tambah Lokasi Tujuan</string>
 </resources>

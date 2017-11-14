@@ -1,17 +1,19 @@
 <resources>
     <string name="app_name">DatabaseModule</string>
     <string name="module_server">http://192.168.1.100/trackjamaahapi/</string>
+    <!--<string name="module_server">http://www.cutebabydeals.com/VisualizeAPI/</string>-->
     <string name="endpoint_login">user/login</string>
     <string name="endpoint_register">user/register</string>
     <string name="endpoint_listgrup">user/listgrup</string>
     <string name="endpoint_creategrup">user/creategrup</string>
     <string name="endpoint_updategrup">user/updategrup</string>
     <string name="endpoint_deletegrup">user/deletegrup</string>
-    <string name="endpoint_sendmessagegrup">user/sendmessage</string>
+    <string name="endpoint_sendmessagegrup">user/sentchat</string>
     <string name="endpoint_senglocationgrup">user/sendlocation</string>
     <string name="endpoint_invitemembergrup">user/invitemember</string>
     <string name="endpoint_konfimasimasukgrup">user/confirmgrup</string>
-
+    <string name="endpoint_setlocation">user/add_location_group</string>
+    <string name="endpoint_getlocation">user/get_location_group</string>
     <!--NEW API-->
     <string name="endpoint_listcontact">user/listcontact</string>
     <string name="endpoint_getchatgrup">user/listchat</string>

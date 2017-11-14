@@ -12,14 +12,16 @@ public class MemberModel extends RealmObject {
     int id;
 
     int id_grup;
+    int id_user;
     String nama, alamat, no_telp, email, image, sha;
 
     public MemberModel() {
     }
 
-    public MemberModel(int id, int id_grup, String nama, String alamat, String no_telp, String email, String image, String sha) {
+    public MemberModel(int id, int id_grup, int id_user, String nama, String alamat, String no_telp, String email, String image, String sha) {
         this.id = id;
         this.id_grup = id_grup;
+        this.id_user = id_user;
         this.nama = nama;
         this.alamat = alamat;
         this.no_telp = no_telp;
@@ -90,5 +92,13 @@ public class MemberModel extends RealmObject {
 
     public void setSha(String sha) {
         this.sha = sha;
+    }
+
+    public int getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(int id_user) {
+        this.id_user = id_user;
     }
 }

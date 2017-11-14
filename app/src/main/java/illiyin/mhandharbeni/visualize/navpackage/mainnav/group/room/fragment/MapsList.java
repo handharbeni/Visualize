@@ -1,8 +1,11 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +16,19 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import illiyin.mhandharbeni.databasemodule.MemberLocationModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.sessionlibrary.Session;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
 import illiyin.mhandharbeni.visualize.R;
 import io.realm.RealmResults;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by root on 10/25/17.
@@ -108,6 +111,40 @@ public class MapsList extends Fragment implements OnMapReadyCallback, SessionLis
                 .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
         googleMap.addMarker(marker);
     }
+    private View preparePinView (String url, final GoogleMap mMap, final LatLng latLng, final String title) {
+        builder.include(latLng);
+        final View marker = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.marker_view, null);
+        final CircleImageView profileimage = marker.findViewById(R.id.profileimage);
+        Picasso.with(getActivity().getApplicationContext()).load(url).into(profileimage, new com.squareup.picasso.Callback(){
+            @Override
+            public void onSuccess() {
+                Bitmap markerMember = createDrawableFromView(getActivity().getApplicationContext(), marker);
+                Marker pinMarker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(title)
+                        .icon(BitmapDescriptorFactory.fromBitmap(markerMember)));
+            }
+            @Override
+            public void onError() {
+
+            }
+        });
+
+        return marker;
+    }
+    public static Bitmap createDrawableFromView(Context context, View view) {
+        view.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
+        view.measure(100, 100);
+        view.layout(0, 0, 100, 100);
+        view.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        return bitmap;
+    }
+
     private void fetch_zoom(GoogleMap googleMap){
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
@@ -120,12 +157,26 @@ public class MapsList extends Fragment implements OnMapReadyCallback, SessionLis
         MemberLocationModel mlm = new MemberLocationModel();
         Crud crud = new Crud(getActivity().getApplicationContext(), mlm);
         RealmResults results = crud.read("id_grup", id);
+        Boolean fetchZoom = false;
         if (results.size()>0){
             for (int i=0;i<results.size();i++){
                 MemberLocationModel resultLocation = (MemberLocationModel) results.get(i);
-                create_marker(googleMaps, Double.valueOf(resultLocation.getLatitude()), Double.valueOf(resultLocation.getLongitude()), resultLocation.getNama());
+                double lats, longs;
+                try {
+                    lats = new Double(resultLocation.getLatitude());
+                    longs =new Double(resultLocation.getLongitude());
+                    LatLng latLng = new LatLng(lats, longs);
+                    preparePinView(resultLocation.getImage(), googleMaps, latLng, resultLocation.getNama());
+                    fetchZoom = true;
+                } catch (NumberFormatException e) {
+                    lats = 0;
+                    longs = 0;
+                    fetchZoom = false;
+                }
             }
-            fetch_zoom(googleMaps);
+            if (fetchZoom){
+                fetch_zoom(googleMaps);
+            }
         }
     }
 

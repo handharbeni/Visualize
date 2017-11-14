@@ -1,20 +1,36 @@
 package illiyin.mhandharbeni.servicemodule.service;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.widget.Toast;
+
+import org.json.JSONException;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fr.quentinklein.slt.LocationTracker;
+import fr.quentinklein.slt.TrackerSettings;
+import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.servicemodule.service.intentservice.ChatService;
 import illiyin.mhandharbeni.servicemodule.service.intentservice.ContactService;
+import illiyin.mhandharbeni.servicemodule.service.intentservice.GroupLocationService;
 import illiyin.mhandharbeni.servicemodule.service.intentservice.GrupService;
 import illiyin.mhandharbeni.servicemodule.service.intentservice.ListMemberLocation;
 import illiyin.mhandharbeni.servicemodule.service.intentservice.ListMemberService;
+
+import static android.content.ContentValues.TAG;
+
 
 /**
  * Created by root on 17/07/17.
@@ -22,7 +38,7 @@ import illiyin.mhandharbeni.servicemodule.service.intentservice.ListMemberServic
 
 public class MainService extends Service {
     public static Boolean serviceRunning = false;
-    public static final long NOTIFY_INTERVAL = 2 * 1000;
+    public static final long NOTIFY_INTERVAL = 1 * 1000;
     private Handler handler = new Handler();
     private Timer timer = null;
 
@@ -33,6 +49,7 @@ public class MainService extends Service {
         }
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0, NOTIFY_INTERVAL);
+        startTrack();
     }
     @Override
     public IBinder onBind(Intent intent) {
@@ -44,7 +61,38 @@ public class MainService extends Service {
         serviceRunning = true;
         return START_STICKY;
     }
+    private void startTrack(){
+        if (    ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // You need to ask the user to enable the permissions
+        } else {
+            TrackerSettings settings =
+                    new TrackerSettings()
+                            .setUseGPS(true)
+                            .setUseNetwork(true)
+                            .setUsePassive(true)
+                            .setTimeBetweenUpdates(1)
+                            .setMetersBetweenUpdates(1);
+            LocationTracker tracker = new LocationTracker(getBaseContext(), settings) {
 
+                @Override
+                public void onLocationFound(Location location) {
+                    try {
+                        AdapterModel adapterModel = new AdapterModel(getBaseContext());
+                        String response = adapterModel.send_location(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onTimeout() {
+
+                }
+            };
+            tracker.startListening();
+        }
+    }
     @Override
     public void onDestroy() {
         serviceRunning = false;
@@ -60,6 +108,7 @@ public class MainService extends Service {
         }
         return false;
     }
+
     class TimeDisplayTimerTask extends TimerTask {
         @Override
         public void run() {
@@ -84,6 +133,10 @@ public class MainService extends Service {
                     }
                     if (!checkIsRunning(ListMemberLocation.class)){
                         Intent is = new Intent(getBaseContext(), ListMemberLocation.class);
+                        startService(is);
+                    }
+                    if (!checkIsRunning(GroupLocationService.class)){
+                        Intent is = new Intent(getBaseContext(), GroupLocationService.class);
                         startService(is);
                     }
                 }
