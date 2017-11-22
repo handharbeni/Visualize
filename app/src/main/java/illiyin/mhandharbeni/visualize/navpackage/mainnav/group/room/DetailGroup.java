@@ -35,7 +35,10 @@ import java.lang.reflect.Field;
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.databasemodule.GrupModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
+import illiyin.mhandharbeni.sessionlibrary.Session;
+import illiyin.mhandharbeni.sessionlibrary.SessionListener;
 import illiyin.mhandharbeni.visualize.R;
+import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.activity.RouteDestinations;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.ChatList;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MapsList;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MemberList;
@@ -291,7 +294,24 @@ public class DetailGroup extends AppCompatActivity {
         fabviewdestinations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Session session = new Session(getApplicationContext(), new SessionListener() {
+                    @Override
+                    public void sessionChange() {
 
+                    }
+                });
+
+//                session.setCustomParams("id", String.valueOf(id));
+
+                Intent i = new Intent(getApplicationContext(), RouteDestinations.class);
+
+//                Bundle bundlex = new Bundle();
+//                bundlex.putString("key_id", String.valueOf(id));
+                i.putExtra("key_id", String.valueOf(id));
+                i.putExtra("key_id_int", id);
+//                i.putExtras(bundlex);
+
+                startActivity(i);
             }
         });
     }
