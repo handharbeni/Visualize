@@ -5,7 +5,6 @@
     android:layout_height="match_parent">
 
     <co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView
-        android:padding="@dimen/padding_listitem"
         app:rrvIsRefreshable="false"
         app:rrvLayoutType="LinearLayout"
         app:rrvEmptyLayoutId="@layout/empty_layout"

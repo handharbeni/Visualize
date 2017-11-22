@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">DatabaseModule</string>
-    <string name="module_server">http://192.168.1.100/trackjamaahapi/</string>
+    <string name="module_server">http://45.32.105.117:2017/</string>
     <!--<string name="module_server">http://www.cutebabydeals.com/VisualizeAPI/</string>-->
     <string name="endpoint_login">user/login</string>
     <string name="endpoint_register">user/register</string>

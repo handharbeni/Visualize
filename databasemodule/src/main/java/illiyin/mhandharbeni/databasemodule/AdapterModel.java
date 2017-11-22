@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.annotation.Nullable;
+
 import illiyin.mhandharbeni.networklibrary.CallHttp;
 import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.sessionlibrary.Session;
@@ -83,7 +85,8 @@ public class AdapterModel implements SessionListener{
     public void sessionChange() {
 
     }
-    public void syncDestinationGroup() throws JSONException {
+    @Nullable
+    public void syncDestinationGroup() throws JSONException, IllegalArgumentException {
         GrupModel gm= new GrupModel();
         Crud crudGrup = new Crud(context, gm);
         if (!session.getToken().equalsIgnoreCase("nothing")){
@@ -96,7 +99,13 @@ public class AdapterModel implements SessionListener{
                             .addFormDataPart("key", session.getToken())
                             .addFormDataPart("id_grup", String.valueOf(newGM.getId()))
                             .build();
-                    String response = callHttp.post(endpoint_getlocationgroup, requestBody);
+                    String response = null;
+                    try{
+                        response = callHttp.post(endpoint_getlocationgroup, requestBody);
+                    }catch(IllegalArgumentException e){
+
+                    }
+//                    String response = callHttp.post(endpoint_getlocationgroup, requestBody);
                     if (!response.isEmpty() || response != null){
                         JSONObject objectResponse = new JSONObject(response);
                         if (objectResponse.getInt("code")==300){
@@ -134,6 +143,7 @@ public class AdapterModel implements SessionListener{
                                             objGLM.setSha(sha);
                                             crudGlm.update(objGLM);
                                             crudGlm.commitObject();
+                                            crudGlm.closeRealm();
                                         }
                                     }else{
                                         /*insert*/
@@ -148,6 +158,7 @@ public class AdapterModel implements SessionListener{
                                         glm.setDate_modified(date_modified);
                                         glm.setSha(sha);
                                         crudGlm.create(glm);
+                                        crudGlm.closeRealm();
                                     }
                                     crudGlm.closeRealm();
                                 }
@@ -156,10 +167,12 @@ public class AdapterModel implements SessionListener{
                     }
                 }
             }
+            crudGrup.closeRealm();
         }
         crudGrup.closeRealm();
     }
-    public void syncGrup() throws JSONException {
+    @Nullable
+    public void syncGrup() throws JSONException, IllegalArgumentException {
         GrupModel gm = new GrupModel();
         crud = new Crud(context, gm);
         if (!session.getToken().equalsIgnoreCase("nothing")){
@@ -167,7 +180,13 @@ public class AdapterModel implements SessionListener{
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("key", session.getToken())
                     .build();
-            String response = callHttp.post(endpoint_listgrup, requestBody);
+            String response = null;
+            try{
+                response = callHttp.post(endpoint_listgrup, requestBody);
+            }catch(IllegalArgumentException e){
+
+            }
+//            String response = callHttp.post(endpoint_listgrup, requestBody);
             if (!response.isEmpty() || response != null){
                 JSONObject objectResponse = new JSONObject(response);
                 if (objectResponse.getInt("code")==300){
@@ -226,10 +245,12 @@ public class AdapterModel implements SessionListener{
                     }
                 }
             }
+            crud.closeRealm();
         }
         crud.closeRealm();
     }
-    public void syncListMember() throws JSONException {
+    @Nullable
+    public void syncListMember() throws JSONException, IllegalArgumentException {
         GrupModel gm = new GrupModel();
         crud = new Crud(context, gm);
         if (!session.getToken().equalsIgnoreCase("nothing")){
@@ -242,7 +263,13 @@ public class AdapterModel implements SessionListener{
                             .addFormDataPart("key", session.getToken())
                             .addFormDataPart("id_grup", String.valueOf(resultGM.getId()))
                             .build();
-                    String response = callHttp.post(endpoint_listmember, requestBody);
+                    String response = null;
+                    try{
+                        response = callHttp.post(endpoint_listmember, requestBody);
+//                        String response = callHttp.post(endpoint_listmember, requestBody);
+                    }catch(IllegalArgumentException e){
+
+                    }
                     if (!response.isEmpty() || response != null) {
                         JSONObject objectResponse = new JSONObject(response);
                         if (objectResponse.getInt("code") == 300) {
@@ -275,6 +302,7 @@ public class AdapterModel implements SessionListener{
                                             updateMM.setSha(sha);
                                             crudMM.update(updateMM);
                                             crudMM.commitObject();
+                                            crudMM.closeRealm();
                                         }
                                     }else{
                                         MemberModel newMM = new MemberModel();
@@ -288,6 +316,7 @@ public class AdapterModel implements SessionListener{
                                         newMM.setImage(image);
                                         newMM.setSha(sha);
                                         crudMM.create(newMM);
+                                        crudMM.closeRealm();
                                     }
                                     crudMM.closeRealm();
                                 }
@@ -296,10 +325,12 @@ public class AdapterModel implements SessionListener{
                     }
                 }
             }
+            crud.closeRealm();
         }
         crud.closeRealm();
     }
-    public void syncListMemberLocation() throws JSONException {
+    @Nullable
+    public void syncListMemberLocation() throws JSONException, IllegalArgumentException {
         GrupModel gm = new GrupModel();
         crud = new Crud(context, gm);
         if (!session.getToken().equalsIgnoreCase("nothing")){
@@ -312,7 +343,13 @@ public class AdapterModel implements SessionListener{
                             .addFormDataPart("key", session.getToken())
                             .addFormDataPart("id_grup", String.valueOf(resultGM.getId()))
                             .build();
-                    String response = callHttp.post(endpoint_listmemberlocation, requestBody);
+                    String response = null;
+
+                    try{
+                        response = callHttp.post(endpoint_listmemberlocation, requestBody);
+                    }catch(IllegalArgumentException e){
+
+                    }
                     if (!response.isEmpty() || response != null) {
                         JSONObject objectResponse = new JSONObject(response);
                         if (objectResponse.getInt("code") == 300) {
@@ -343,6 +380,7 @@ public class AdapterModel implements SessionListener{
                                             crudMLM.update(updateLocation);
                                             crudMLM.commitObject();
                                             session.setCustomParams("CHANGELOCATION", sha);
+                                            crudMLM.closeRealm();
                                         }
                                     }else{
                                         /*insert*/
@@ -356,6 +394,7 @@ public class AdapterModel implements SessionListener{
                                         newMLM.setLongitude(longitude);
                                         newMLM.setSha(sha);
                                         crudMLM.create(newMLM);
+                                        crudMLM.closeRealm();
                                     }
                                     crudMLM.closeRealm();
                                 }
@@ -364,10 +403,12 @@ public class AdapterModel implements SessionListener{
                     }
                 }
             }
+            crud.closeRealm();
         }
         crud.closeRealm();
     }
-    public void syncChat() throws JSONException {
+    @Nullable
+    public void syncChat() throws JSONException, IllegalArgumentException {
         ChatModel cm = new ChatModel();
         crud = new Crud(context, cm);
         if (!session.getToken().equalsIgnoreCase("nothing")){
@@ -382,7 +423,13 @@ public class AdapterModel implements SessionListener{
                             .addFormDataPart("key", session.getToken())
                             .addFormDataPart("id_grup", String.valueOf(ggm.getId()))
                             .build();
-                    String response = callHttp.post(endpoint_getchatgrup, requestBody);
+                    String response = null;
+                    try{
+                        response = callHttp.post(endpoint_getchatgrup, requestBody);
+                    }catch(IllegalArgumentException e){
+
+                    }
+//                    String response = callHttp.post(endpoint_getchatgrup, requestBody);
                     if (!response.isEmpty() || response != null){
                         JSONObject objectResponse = new JSONObject(response);
                         if (objectResponse.getInt("code")==300){
@@ -445,12 +492,15 @@ public class AdapterModel implements SessionListener{
                         }
                     }
                 }
+                crudGrup.closeRealm();
             }
+            crud.closeRealm();
             crudGrup.closeRealm();
         }
         crud.closeRealm();
     }
-    public void syncContact() throws JSONException {
+    @Nullable
+    public void syncContact() throws JSONException, IllegalArgumentException {
         ContactModel cm = new ContactModel();
         crud = new Crud(context, cm);
 
@@ -459,7 +509,14 @@ public class AdapterModel implements SessionListener{
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("key", session.getToken())
                     .build();
-            String response = callHttp.post(endpoint_listcontact, requestBody);
+            String response = null;
+            try{
+                response = callHttp.post(endpoint_listcontact, requestBody);
+            }catch(IllegalArgumentException e) {
+
+            }
+
+//                String response = callHttp.post(endpoint_listcontact, requestBody);
             if (!response.isEmpty() || response != null){
                 JSONObject objectResponse = new JSONObject(response);
                 if (objectResponse.getInt("code")==300){
@@ -517,7 +574,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("email", email)
                 .addFormDataPart("password", password)
                 .build();
-        String response = callHttp.post(endpoint_login, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_login, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_login, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getString("status").equalsIgnoreCase("Ok")){
             JSONArray arrayData = objectResponse.getJSONArray("data");
@@ -552,7 +615,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("email", email)
                 .addFormDataPart("password", password)
                 .build();
-        String response = callHttp.post(endpoint_register, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_register, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_register, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Pendaftaran Berhasil.";
@@ -567,7 +636,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("namagrup", namagrup)
                 .addFormDataPart("masaaktif", masaaktif)
                 .build();
-        String response = callHttp.post(endpoint_creategrup, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_creategrup, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_creategrup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Grup Berhasil Di Buat.";
@@ -583,7 +658,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("namagrup", namagrup)
                 .addFormDataPart("masaaktif", masaaktif)
                 .build();
-        String response = callHttp.post(endpoint_updategrup, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_updategrup, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_updategrup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Grup Berhasil Di Buat.";
@@ -597,7 +678,12 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("key", session.getToken())
                 .addFormDataPart("id_grup", id_grup)
                 .build();
-        String response = callHttp.post(endpoint_login, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_login, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }//        String response = callHttp.post(endpoint_login, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Grup Berhasil Di Hapus.";
@@ -612,7 +698,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("id_grup", id_grup)
                 .addFormDataPart("pesan", message)
                 .build();
-        String response = callHttp.post(endpoint_sendmessagegrup, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_sendmessagegrup, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_sendmessagegrup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Pesan anda terkirim.";
@@ -627,7 +719,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("latitude", latitude)
                 .addFormDataPart("longitude", longitude)
                 .build();
-        String response = callHttp.post(endpoint_senglocationgrup, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_senglocationgrup, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_senglocationgrup, requestBody);
         returns = response;
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
@@ -643,7 +741,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("id_grup", id_grup)
                 .addFormDataPart("no_telp", no_telp)
                 .build();
-        String response = callHttp.post(endpoint_invitemembergrup, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_invitemembergrup, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_invitemembergrup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Pesan anda terkirim.";
@@ -657,7 +761,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("key", session.getToken())
                 .addFormDataPart("id_grup", id_grup)
                 .build();
-        String response = callHttp.post(endpoint_konfimasimasukgrup, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_konfimasimasukgrup, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_konfimasimasukgrup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Konfirmasi sukses.";
@@ -671,7 +781,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("key", session.getToken())
                 .addFormDataPart("no_telp", notelp)
                 .build();
-        String response = callHttp.post(endpoint_addcontact, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_addcontact, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_addcontact, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Pesan add.";
@@ -690,7 +806,13 @@ public class AdapterModel implements SessionListener{
                 .addFormDataPart("prioritas", prioritas)
                 .addFormDataPart("type", type)
                 .build();
-        String response = callHttp.post(endpoint_sentlocationgroup, requestBody);
+        String response = null;
+        try{
+            response = callHttp.post(endpoint_sentlocationgroup, requestBody);
+        }catch(IllegalArgumentException e) {
+
+        }
+//        String response = callHttp.post(endpoint_sentlocationgroup, requestBody);
         JSONObject objectResponse = new JSONObject(response);
         if (objectResponse.getInt("code")==300){
             returns = "Lokasi Berhasil Ditambahkan";

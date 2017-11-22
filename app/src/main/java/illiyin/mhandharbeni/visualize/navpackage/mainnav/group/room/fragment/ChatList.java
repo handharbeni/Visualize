@@ -60,7 +60,7 @@ public class ChatList extends Fragment {
     }
 
     private void fetch_adapter(){
-        RealmResults memberResults = crud.read();
+        RealmResults memberResults = crud.read("id_grup", id);
         Log.d(TAG, "fetch_adapter: Result Size "+String.valueOf(memberResults.size()));
 //        RealmResults memberResults = crud.readSorted("id_grup", id, "id", Sort.DESCENDING);
         chatAdapter = new ChatAdapter(getActivity().getApplicationContext(), memberResults, true);

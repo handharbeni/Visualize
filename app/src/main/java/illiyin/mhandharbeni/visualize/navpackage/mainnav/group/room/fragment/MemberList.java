@@ -48,7 +48,6 @@ public class MemberList extends Fragment {
     private void fetch_extras(){
         Bundle args = getArguments();
         id = args.getInt("id", 0);
-        Log.d(TAG, "startService: "+String.valueOf(id)+" FROM FRAGMENT ");
     }
 
     private void fetch_modul(){
@@ -62,7 +61,6 @@ public class MemberList extends Fragment {
 
     private void fetch_adapter(){
         RealmResults memberResults = crud.read("id_grup", id);
-        Log.d(TAG, "startService: "+String.valueOf(memberResults.size())+" FROM FRAGMENT TOTAL FILE");
         memberAdapter = new MemberAdapter(getActivity().getApplicationContext(), memberResults, true);
         listmember.setAdapter(memberAdapter);
     }
@@ -72,8 +70,6 @@ public class MemberList extends Fragment {
         if(memberResults.size() > 0){
             for (int i=0;i<memberResults.size();i++){
                 MemberModel mm = (MemberModel) memberResults.get(i);
-                Log.d(TAG, "fetch_data: ID USER "+mm.getId());
-                Log.d(TAG, "fetch_data: ID GRUP "+mm.getId_grup());
             }
         }
     }

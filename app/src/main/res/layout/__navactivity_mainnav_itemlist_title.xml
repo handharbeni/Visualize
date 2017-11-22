@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:padding="@dimen/padding_listitem"
     android:layout_height="wrap_content">
     <TextView
+        android:textColor="@color/black"
         android:textSize="@dimen/fontsize_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/title"
         android:text="Title List"/>
+
     <TextView
-        android:textSize="@dimen/fontsize_subtitle"
+        android:id="@+id/subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/subtitle"
         android:layout_marginBottom="@dimen/margin_border_bottom"
-        android:text="SubTitle List"/>
+        android:text="SubTitle List"
+        android:textColor="@color/blueBlack"
+        android:textSize="@dimen/fontsize_subtitle" />
     <View
         android:layout_marginTop="@dimen/margin_border_bottom"
         android:layout_marginLeft="@dimen/margin_border_bottom"

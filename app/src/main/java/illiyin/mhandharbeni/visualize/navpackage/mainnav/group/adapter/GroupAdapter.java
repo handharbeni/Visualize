@@ -49,6 +49,7 @@ public class GroupAdapter extends RealmBasedRecyclerViewAdapter<GrupModel, Group
             }
         });
         myViewHolder.subtitle.setVisibility(View.INVISIBLE);
+        myViewHolder.image.setVisibility(View.GONE);
         myViewHolder.listparent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

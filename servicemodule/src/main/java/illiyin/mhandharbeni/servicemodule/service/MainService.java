@@ -38,7 +38,7 @@ import static android.content.ContentValues.TAG;
 
 public class MainService extends Service {
     public static Boolean serviceRunning = false;
-    public static final long NOTIFY_INTERVAL = 1 * 1000;
+    public static final long NOTIFY_INTERVAL = 2 * 1000;
     private Handler handler = new Handler();
     private Timer timer = null;
 
@@ -71,8 +71,8 @@ public class MainService extends Service {
                             .setUseGPS(true)
                             .setUseNetwork(true)
                             .setUsePassive(true)
-                            .setTimeBetweenUpdates(1)
-                            .setMetersBetweenUpdates(1);
+                            .setTimeBetweenUpdates(1000)
+                            .setMetersBetweenUpdates(10);
             LocationTracker tracker = new LocationTracker(getBaseContext(), settings) {
 
                 @Override

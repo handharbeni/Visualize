@@ -1,6 +1,7 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -15,10 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.json.JSONException;
@@ -32,13 +39,15 @@ import illiyin.mhandharbeni.visualize.R;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.ChatList;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MapsList;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MemberList;
+import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.PlaceList;
 import io.realm.RealmResults;
 
 public class DetailGroup extends AppCompatActivity {
+    int PLACE_PICKER_REQUEST = 1;
+    private Integer RESULT_OK = -1, RESULT_CANCEL=0;
+
     private static final String TAG = "DetailGrup";
     private BottomNavigationViewEx navigation;
-
-    private FrameLayout detailmainframe;
 
     private AdapterModel adapterModel;
 
@@ -47,7 +56,7 @@ public class DetailGroup extends AppCompatActivity {
     private Fragment fragment;
     private Bundle bundleFragment;
 
-    private FloatingActionButton fabinvitemember, fabsendmessage, fabaddlocation;
+    private FloatingActionButton fabinvitemember, fabsendmessage, fabaddlocation, fabviewdestinations;
 
     private MaterialDialog dialogInvite, dialogSendChat, dialogAddLocation;
 
@@ -86,7 +95,8 @@ public class DetailGroup extends AppCompatActivity {
                 case R.id.navigation_lokasi:
                     hideAllFab();
                     fabaddlocation.show();
-                    fragment = new ChatList();
+                    fabviewdestinations.show();
+                    fragment = new PlaceList();
                     bundleFragment = new Bundle();
                     bundleFragment.putInt("id", id);
                     fragment.setArguments(bundleFragment);
@@ -103,10 +113,18 @@ public class DetailGroup extends AppCompatActivity {
         fetch_modul();
         fetch_extras();
         setContentView(R.layout.__navactivity_mainnav_layout_detailgroup);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fetch_title();
         fetch_element();
         fetch_event();
         fetch_startup();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        onBackPressed();
+        return true;
     }
     private void invite_member(){
         dialogInvite = new MaterialDialog.Builder(this)
@@ -127,7 +145,6 @@ public class DetailGroup extends AppCompatActivity {
         EditText notelp = v.findViewById(R.id.notelpcontact);
         try {
             String response = adapterModel.invite_member(String.valueOf(id), notelp.getText().toString());
-            Log.d(TAG, "addGrup: "+response);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -151,7 +168,6 @@ public class DetailGroup extends AppCompatActivity {
         EditText message = v.findViewById(R.id.sendmessage);
         try {
             String response = adapterModel.send_message(String.valueOf(id), message.getText().toString());
-            Log.d(TAG, "doSend: "+response);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -164,10 +180,37 @@ public class DetailGroup extends AppCompatActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        doSaveLocation();
                     }
                 })
                 .build();
         dialogAddLocation.show();
+    }
+    private void doSaveLocation(){
+        try {
+            String lokasi = null, latitude = null, longitude = null, prioritas = "0", type = null;
+            View v = dialogAddLocation.getCustomView();
+            Spinner spinnerType = v.findViewById(R.id.spinnerType);
+            EditText alamat = v.findViewById(R.id.alamat);
+            TextView tlatitude = v.findViewById(R.id.latitude);
+            TextView tlongitude = v.findViewById(R.id.longitude);
+            type = spinnerType.getSelectedItem().toString();
+            lokasi = alamat.getText().toString();
+            latitude = tlatitude.getText().toString();
+            longitude = tlongitude.getText().toString();
+            adapterModel.add_location_grup(String.valueOf(id), lokasi, latitude, longitude, prioritas, type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void doPickLocation(String sAlamat, String sLatitude, String sLongitude){
+        View v = dialogAddLocation.getCustomView();
+        EditText alamat = v.findViewById(R.id.alamat);
+        TextView lati = v.findViewById(R.id.latitude);
+        TextView longi = v.findViewById(R.id.longitude);
+        lati.setText(sLatitude);
+        longi.setText(sLongitude);
+        alamat.setText(sAlamat);
     }
     private void fetch_title(){
         GrupModel gm = new GrupModel();
@@ -211,9 +254,8 @@ public class DetailGroup extends AppCompatActivity {
         fabinvitemember = (FloatingActionButton) findViewById(R.id.fabinvitemember);
         fabsendmessage = (FloatingActionButton) findViewById(R.id.fabsendmessage);
         fabaddlocation = (FloatingActionButton) findViewById(R.id.fabaddlocation);
+        fabviewdestinations = (FloatingActionButton) findViewById(R.id.fabviewdestinations);
         hideAllFab();
-
-        detailmainframe = (FrameLayout) findViewById(R.id.detailmainframe);
 
         navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
         navigation.enableAnimation(false);
@@ -242,7 +284,14 @@ public class DetailGroup extends AppCompatActivity {
         fabaddlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add_location();
+//                add_location();
+                placePicker();
+            }
+        });
+        fabviewdestinations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
@@ -251,6 +300,7 @@ public class DetailGroup extends AppCompatActivity {
         fabinvitemember.hide();
         fabsendmessage.hide();
         fabaddlocation.hide();
+        fabviewdestinations.hide();
     }
 
     private void fetch_startup(){
@@ -262,6 +312,33 @@ public class DetailGroup extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.detailmainframe, fragment);
         ft.commit();
+    }
+    private void placePicker(){
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(this, data);
+                add_location();
+                doPickLocation(String.valueOf(place.getAddress()), String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude));
+
+//                session.setCustomParams(LATDESTI, String.valueOf(place.getLatLng().latitude));
+//                session.setCustomParams(LONGDESTI, String.valueOf(place.getLatLng().longitude));
+//                session.setCustomParams(ADDRESSDESTI, String.valueOf(place.getAddress()));
+//                session.setCustomParams(ZIPCODEDESTI, String.valueOf(place.getLocale()));
+//                calculateDistance();
+            }
+        }
     }
 
 }
