@@ -20,7 +20,9 @@ public class Crud {
     public Crud(Context context, RealmObject realmObject) {
         this.context = context;
         this.realmObject = realmObject;
-        crudRealm = new CRUDRealm(this.context, this.realmObject);
+        if (crudRealm == null){
+            crudRealm = new CRUDRealm(this.context, this.realmObject);
+        }
     }
 
     public void create(RealmObject realmObject){

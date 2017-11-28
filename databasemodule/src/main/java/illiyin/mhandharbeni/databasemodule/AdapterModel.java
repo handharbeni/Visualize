@@ -106,7 +106,7 @@ public class AdapterModel implements SessionListener{
 
                     }
 //                    String response = callHttp.post(endpoint_getlocationgroup, requestBody);
-                    if (!response.isEmpty() || response != null){
+                    if (/*!response.isEmpty() || */response != null){
                         JSONObject objectResponse = new JSONObject(response);
                         if (objectResponse.getInt("code")==300){
                             JSONArray arrayData = objectResponse.getJSONArray("data");
