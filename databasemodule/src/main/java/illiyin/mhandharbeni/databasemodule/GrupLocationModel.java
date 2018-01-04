@@ -11,25 +11,20 @@ public class GrupLocationModel extends RealmObject {
     @PrimaryKey
     int id;
 
-    int id_grup;
-    String nama_lokasi, latitude, longitude;
-    int prioritas;
-    String type, date_add, date_modified, sha;
+    private int id_grup;
+    private String nama_lokasi, latitude, longitude;
+    private int prioritas;
+    private String type, date_add, date_modified, sha, deleted;
 
     public GrupLocationModel() {
     }
 
-    public GrupLocationModel(int id, int id_grup, String nama_lokasi, String latitude, String longitude, int prioritas, String type, String date_add, String date_modified, String sha) {
-        this.id = id;
-        this.id_grup = id_grup;
-        this.nama_lokasi = nama_lokasi;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.prioritas = prioritas;
-        this.type = type;
-        this.date_add = date_add;
-        this.date_modified = date_modified;
-        this.sha = sha;
+    public String getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(String deleted) {
+        this.deleted = deleted;
     }
 
     public int getId() {

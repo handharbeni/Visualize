@@ -2,62 +2,49 @@ package illiyin.mhandharbeni.visualize.mainpackage.account;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
-import illiyin.mhandharbeni.sessionlibrary.Session;
-import illiyin.mhandharbeni.sessionlibrary.SessionListener;
 import illiyin.mhandharbeni.utilslibrary.SnackBar;
 import illiyin.mhandharbeni.utilslibrary.SnackBarListener;
 import illiyin.mhandharbeni.visualize.NavActivity;
 import illiyin.mhandharbeni.visualize.R;
-import illiyin.mhandharbeni.visualize.SplashActivity;
 
 /**
  * Created by root on 10/23/17.
  */
 
 public class LoginFragment extends Fragment implements SnackBarListener {
-    private static final String TAG = "LoginFragment";
     private View v;
     private TextView toregister;
     private TextInputEditText username, password;
     private Button do_login;
 
     private AdapterModel adapterModel;
-    private Session session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fetch_modul();
-
         v = inflater.inflate(R.layout.__mainactivity_layout_login, container, false);
+        return v;
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        fetch_modul();
         fetch_element();
         fetch_event();
-        return v;
     }
 
     private void fetch_modul(){
         adapterModel = new AdapterModel(getActivity().getApplicationContext());
-        session = new Session(getActivity().getApplicationContext(), new SessionListener() {
-            @Override
-            public void sessionChange() {
-
-            }
-        });
     }
 
     private void fetch_element(){
@@ -76,10 +63,8 @@ public class LoginFragment extends Fragment implements SnackBarListener {
                     try {
                         do_login.setEnabled(false);
                         doLogin();
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         do_login.setEnabled(true);
-                        Log.d(TAG, "onClick: "+e.getMessage());
-                        e.printStackTrace();
                     }
                 }
             }
@@ -106,7 +91,7 @@ public class LoginFragment extends Fragment implements SnackBarListener {
         }
     }
 
-    private void doLogin() throws JSONException {
+    private void doLogin() throws Exception {
         String response = adapterModel.login(username.getText().toString(), password.getText().toString());
         showMessage(response);
         if (response.equalsIgnoreCase(getString(R.string.placeholder_loginberhasil))){

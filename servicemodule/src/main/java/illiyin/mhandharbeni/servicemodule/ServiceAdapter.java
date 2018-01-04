@@ -24,4 +24,9 @@ public class ServiceAdapter {
             context.startService(new Intent(context, MainService.class));
         }
     }
+    public void stopService(){
+        if (!MainService.serviceRunning){
+            context.stopService(new Intent(context, MainService.class));
+        }
+    }
 }

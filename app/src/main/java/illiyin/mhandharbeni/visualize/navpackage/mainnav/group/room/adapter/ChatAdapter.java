@@ -1,6 +1,7 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import illiyin.mhandharbeni.databasemodule.ChatModel;
-import illiyin.mhandharbeni.databasemodule.MemberModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.sessionlibrary.Session;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
@@ -30,15 +30,16 @@ public class ChatAdapter extends RealmBasedRecyclerViewAdapter<ChatModel, ChatAd
 
 
     @Override
-    public ChatAdapter.MyViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int i) {
+    public ChatAdapter.MyViewHolder onCreateRealmViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = inflater.inflate(R.layout.__navactivity_mainnav_itemchat, viewGroup, false);
         return new ChatAdapter.MyViewHolder((LinearLayout) v);
     }
 
     @Override
-    public void onBindRealmViewHolder(final ChatAdapter.MyViewHolder myViewHolder, final int i) {
+    public void onBindRealmViewHolder(@NonNull final ChatAdapter.MyViewHolder myViewHolder, final int i) {
         final ChatModel m = realmResults.get(i);
         String nama = session.getCustomParams("NAMA", "nothing");
+        assert m != null;
         if (m.getNama_user().equalsIgnoreCase(nama)){
             /*layoutme*/
             myViewHolder.layoutfrom.setVisibility(View.GONE);
@@ -52,11 +53,11 @@ public class ChatAdapter extends RealmBasedRecyclerViewAdapter<ChatModel, ChatAd
         }
 
     }
-    public class MyViewHolder extends RealmViewHolder {
+    class MyViewHolder extends RealmViewHolder {
         LinearLayout layoutfrom, layoutme;
         ImageView imagemessageleft, imagemessageright;
         TextView contentmessageleft, contentmessageright;
-        public MyViewHolder(LinearLayout container) {
+        MyViewHolder(LinearLayout container) {
             super(container);
             this.layoutfrom= container.findViewById(R.id.layoutfrom);
             this.layoutme = container.findViewById(R.id.layoutme);

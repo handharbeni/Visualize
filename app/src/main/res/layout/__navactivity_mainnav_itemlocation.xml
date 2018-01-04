@@ -1,37 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/cardParent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@android:color/white"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_margin="10dp">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:background="@android:color/white"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:padding="10dp"
-            android:id="@+id/nama_lokasi"
-            android:layout_width="match_parent"
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Nama Lokasi" />
-        <TextView
-            android:visibility="gone"
-            android:textColor="@color/black"
-            android:padding="10dp"
-            android:id="@+id/prioritas_lokasi"
-            android:layout_width="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageDelete"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/nama_lokasi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="10dp"
+                android:text="Nama Lokasi"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prioritas_lokasi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Prioritas Lokasi"
+                android:textColor="@color/black"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/alamat_lokasi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Alamat Lokasi"
+                android:textColor="@color/black"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/imageDelete"
+            layout="@layout/__layout_icon_delete"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Prioritas Lokasi"/>
-        <TextView
-            android:visibility="gone"
-            android:textColor="@color/black"
-            android:padding="10dp"
-            android:id="@+id/alamat_lokasi"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Alamat Lokasi" />
-    </LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

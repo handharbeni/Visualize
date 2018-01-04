@@ -11,18 +11,18 @@ public class ChatModel extends RealmObject {
     @PrimaryKey
     int id;
 
-    int id_grup;
-    int id_user;
+    private int id_grup;
+    private int id_user;
 
-    String nama_user;
-    String image_user;
-    String nama_grup;
+    private String nama_user;
+    private String image_user;
+    private String nama_grup;
 
-    String type;
-    String text;
-    String deleted;
-    String date_add;
-    String sha;
+    private String type;
+    private String text;
+    private String deleted;
+    private String date_add;
+    private String sha;
 
     public ChatModel() {
     }

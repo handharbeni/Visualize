@@ -8,16 +8,28 @@
             android:checkable="false"
             android:id="@+id/add_group"
             android:icon="@drawable/ic_create_grup"
-            android:title="New Group" />
+            android:title="@string/placeholder_hintcreategrup" />
         <item
             android:checkable="false"
             android:id="@+id/add_contact"
             android:icon="@drawable/ic_add_contact"
-            android:title="New Contact" />
+            android:title="@string/placeholder_hintaddcontact" />
     </group>
 
     <item android:title="Account" android:checkable="false">
         <menu>
+            <item
+                android:id="@+id/nav_update_profile"
+                android:icon="@drawable/ic_account_box"
+                android:title="@string/placeholder_change_profile" />
+            <item
+                android:id="@+id/nav_update_password"
+                android:icon="@drawable/ic_vpn_key_grey"
+                android:title="@string/placeholder_change_password" />
+            <item
+                android:id="@+id/nav_guideline"
+                android:icon="@drawable/ic_help"
+                android:title="@string/guideline" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_logout"

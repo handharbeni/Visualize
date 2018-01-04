@@ -3,6 +3,8 @@ package illiyin.mhandharbeni.servicemodule.service.intentservice;
 import android.app.IntentService;
 import android.content.Intent;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import org.json.JSONException;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
@@ -27,8 +29,8 @@ public class GroupLocationService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         try {
             adapterModel.syncDestinationGroup();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            FirebaseCrash.report(e);
         }
     }
 }

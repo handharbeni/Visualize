@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '27.0.2'
 
     defaultConfig {
         minSdkVersion 16
@@ -19,7 +19,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(path: ':databasemodule')
-    compile 'com.github.quentin7b:android-location-tracker:3.2'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':databasemodule')
+    implementation 'com.github.quentin7b:android-location-tracker:3.2'
+    implementation 'com.google.firebase:firebase-crash:11.8.0'
+    implementation 'io.reactivex:rxjava:1.2.4'
+    implementation 'io.reactivex:rxandroid:1.2.1'
 }

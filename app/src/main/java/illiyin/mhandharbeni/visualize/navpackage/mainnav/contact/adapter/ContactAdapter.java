@@ -1,21 +1,19 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.contact.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import illiyin.mhandharbeni.databasemodule.ContactModel;
-import illiyin.mhandharbeni.databasemodule.GrupModel;
-import illiyin.mhandharbeni.realmlibrary.Crud;
-import illiyin.mhandharbeni.sessionlibrary.Session;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
 import illiyin.mhandharbeni.visualize.R;
+import illiyin.mhandharbeni.visualize.utils.DeleteItem;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
@@ -25,47 +23,54 @@ import io.realm.RealmViewHolder;
  */
 
 public class ContactAdapter extends RealmBasedRecyclerViewAdapter<ContactModel, ContactAdapter.MyViewHolder> implements SessionListener {
-    private Session session;
-    private ContactModel contactModel;
-    private Crud crud;
+    private DeleteItem deleteItem;
+
     @Override
-    public ContactAdapter.MyViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int i) {
-        View v = inflater.inflate(R.layout.__navactivity_mainnav_itemlist, viewGroup, false);
-        return new ContactAdapter.MyViewHolder((LinearLayout) v);
+    public ContactAdapter.MyViewHolder onCreateRealmViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View v;
+        v = inflater.inflate(R.layout.__navactivity_mainnav_itemlist, viewGroup, false);
+        return new ContactAdapter.MyViewHolder((ConstraintLayout) v);
     }
 
     @Override
-    public void onBindRealmViewHolder(final ContactAdapter.MyViewHolder myViewHolder, final int i) {
+    public void onBindRealmViewHolder(@NonNull final ContactAdapter.MyViewHolder myViewHolder, final int i) {
         final ContactModel m = realmResults.get(i);
 
+        assert m != null;
         Glide.with(getContext())
                 .load(m.getImage())
                 .into(myViewHolder.image);
         myViewHolder.title.setText(m.getNama());
-        myViewHolder.subtitle.setVisibility(View.INVISIBLE);
+        myViewHolder.subtitle.setText(m.getNo_telp());
+        myViewHolder.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteItem.onConfirmDelete(m.getId(), "Yakin akan Hapus Contact?");
+            }
+        });
     }
 
     @Override
     public void sessionChange() {
 
     }
-    public class MyViewHolder extends RealmViewHolder {
-        LinearLayout listparent;
+    class MyViewHolder extends RealmViewHolder {
+        ConstraintLayout listparent;
         ImageView image;
         TextView title, subtitle;
-        public MyViewHolder(LinearLayout container) {
+        ImageView iconDelete;
+        MyViewHolder(ConstraintLayout container) {
             super(container);
             this.listparent = container.findViewById(R.id.listparent);
             this.image = container.findViewById(R.id.image);
             this.title = container.findViewById(R.id.title);
             this.subtitle = container.findViewById(R.id.subtitle);
+            this.iconDelete = container.findViewById(R.id.iconDelete);
         }
     }
-    public ContactAdapter(Context context, RealmResults<ContactModel> realmResults, boolean automaticUpdate) {
+    public ContactAdapter(Context context, RealmResults<ContactModel> realmResults, boolean automaticUpdate, DeleteItem deleteItem) {
         super(context, realmResults, automaticUpdate, false);
-        session = new Session(getContext(), this);
-        contactModel = new ContactModel();
-        crud = new Crud(getContext(), contactModel);
+        this.deleteItem = deleteItem;
     }
 }
 

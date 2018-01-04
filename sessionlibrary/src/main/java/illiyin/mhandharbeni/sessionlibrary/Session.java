@@ -14,7 +14,7 @@ import static android.content.ContentValues.TAG;
 public class Session implements EncryptedPreferences.OnSharedPreferenceChangeListener{
     private SessionListener sessionListener;
     private String defaultKey = "aJ5QElpvadHaiz7mcPNPVQx0P3Xxx0P3Xx";
-    public String NAMA = "NAMA",
+    public static String NAMA = "NAMA",
             ALAMAT = "ALAMAT",
             NOTELP = "NOTELP",
             EMAIL = "EMAIL",

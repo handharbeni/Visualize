@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/markerimage"
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_marker_leader" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/profileimage"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="@+id/markerimage"
+        app:layout_constraintEnd_toStartOf="@+id/markerimage"
+        app:layout_constraintStart_toEndOf="@+id/markerimage"
+        app:layout_constraintTop_toTopOf="@+id/markerimage" />
+
+</android.support.constraint.ConstraintLayout>

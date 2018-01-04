@@ -4,6 +4,8 @@ import android.content.Context;
 import android.location.Geocoder;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,8 +60,8 @@ public class Address {
                     }
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            FirebaseCrash.report(e);
         }
         return valuesm;
     }
@@ -76,8 +78,8 @@ public class Address {
 //            String country = addresses.get(0).getCountryName();
 //            String postalCode = addresses.get(0).getPostalCode();
 //            String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            FirebaseCrash.report(e);
         }
         return address;
     }

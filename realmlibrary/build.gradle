@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '27.0.2'
 
     defaultConfig {
         minSdkVersion 16
@@ -23,11 +23,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'illiyin.mhandharbeni.crudrealmmodul:crudrealmmodul:0.2.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'illiyin.mhandharbeni.crudrealmmodul:crudrealmmodul:0.2.0'
+    implementation 'com.google.firebase:firebase-crash:11.8.0'
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->

@@ -35,6 +35,7 @@ public class Crud {
     public RealmResults read(String key, String value){
         return crudRealm.read(key, value);
     }
+
     public Crud reads(String key, Integer value){
         read(key,value);
         return this;
@@ -86,6 +87,9 @@ public class Crud {
     }
     public void closeRealm(){
         if (crudRealm!=null){
+            if (crudRealm.realm.isInTransaction()){
+                crudRealm.realm.cancelTransaction();
+            }
             crudRealm.closeRealm();
             crudRealm = null;
         }

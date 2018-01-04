@@ -11,15 +11,15 @@ public class GrupModel extends RealmObject {
     @PrimaryKey
     int id;
 
-    String nama_grup;
-    int id_user;
-    int masa_aktif;
-    String date_add;
-    String date_end;
-    int paid;
-    String deleted;
-    int kuota_free;
-    String sha;
+    private String nama_grup;
+    private int id_user;
+    private int masa_aktif;
+    private String date_add;
+    private String date_end;
+    private int paid;
+    private String deleted;
+    private int kuota_free;
+    private String sha;
 
     public GrupModel() {
     }

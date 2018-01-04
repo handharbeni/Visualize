@@ -1,16 +1,9 @@
 package illiyin.mhandharbeni.networklibrary;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
-import com.zplesac.connectionbuddy.ConnectionBuddy;
-import com.zplesac.connectionbuddy.ConnectionBuddyConfiguration;
-import com.zplesac.connectionbuddy.interfaces.ConnectivityChangeListener;
-import com.zplesac.connectionbuddy.models.ConnectivityEvent;
-import com.zplesac.connectionbuddy.models.ConnectivityState;
+import com.google.firebase.crash.FirebaseCrash;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -23,21 +16,18 @@ import okhttp3.RequestBody;
  */
 
 public class CallHttp {
-    Context context;
-    AndroidCall androidCall;
-
-    Boolean connected;
+    private AndroidCall androidCall;
 
     public CallHttp(Context context) {
-        this.context = context;
-        androidCall = new AndroidCall(this.context);
+        Context context1 = context;
+        androidCall = new AndroidCall(context1);
     }
     public String get(String url){
-        if (isOnlines()){
+        if (isOnline()){
             try {
                 return androidCall.get(url);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                FirebaseCrash.report(e);
             }
         }else{
             return null;
@@ -45,11 +35,11 @@ public class CallHttp {
         return null;
     }
     public String post(String url, RequestBody requestBody){
-        if (isOnlines()){
+        if (isOnline()){
             try {
                 return androidCall.post(url, requestBody);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                FirebaseCrash.report(e);
             }
         }else{
             return null;
@@ -57,23 +47,21 @@ public class CallHttp {
         return null;
     }
 
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-    public boolean isOnlines() {
+    private boolean isOnline() {
         try {
             int timeoutMs = 1500;
             Socket sock = new Socket();
             SocketAddress sockaddr = new InetSocketAddress("45.32.105.117", 2017);
 
             sock.connect(sockaddr, timeoutMs);
+            sock.setKeepAlive(false);
+            sock.setReuseAddress(false);
             sock.close();
 
             return true;
-        } catch (IOException e) { return false; }
-//        return true;
+        } catch (Exception e) {
+            FirebaseCrash.report(e);
+            return false;
+        }
     }
 }

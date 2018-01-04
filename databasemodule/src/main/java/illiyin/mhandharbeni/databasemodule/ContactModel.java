@@ -9,9 +9,9 @@ import io.realm.annotations.PrimaryKey;
 
 public class ContactModel extends RealmObject {
     @PrimaryKey
-    int id;
+    private int id;
 
-    String nama, alamat, no_telp, email, image, sha;
+    private String nama, alamat, no_telp, email, image, sha;
 
     public ContactModel() {
     }

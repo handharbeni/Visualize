@@ -10,7 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.h6ah4i.android.tablayouthelper.TabLayoutHelper;
+
+import net.frederico.showtipsview.ShowTipsBuilder;
+import net.frederico.showtipsview.ShowTipsView;
+import net.frederico.showtipsview.ShowTipsViewInterface;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.sessionlibrary.Session;
@@ -23,6 +28,8 @@ import illiyin.mhandharbeni.visualize.navpackage.mainnav.adapter.TabsPagerAdapte
  */
 
 public class MainNav extends Fragment implements TabLayout.OnTabSelectedListener {
+    private static Integer tooltipTabGroup = 122;
+    private static Integer tooltipTabContac = 123;
     private View v;
 
     private Session session;
@@ -35,10 +42,20 @@ public class MainNav extends Fragment implements TabLayout.OnTabSelectedListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.__navactivity_mainnav, container, false);
+        return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         fetch_element();
         fetch_module();
         fetch_view();
-        return v;
+        try {
+            showTooltipTabGroup();
+        }catch (Exception e){
+            FirebaseCrash.report(e);
+        }
     }
 
     private void fetch_module(){
@@ -63,8 +80,6 @@ public class MainNav extends Fragment implements TabLayout.OnTabSelectedListener
         mTabLayoutHelper = new TabLayoutHelper(tabLayout, viewPager);
         mTabLayoutHelper.setAutoAdjustTabModeEnabled(true);
         tabLayout.setupWithViewPager(viewPager);
-//        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.blueCustom));
-//        tabLayout.setTabTextColors(getResources().getColor(R.color.greyCustom), getResources().getColor(R.color.blueCustom));
         tabLayout.addOnTabSelectedListener(this);
     }
 
@@ -88,5 +103,39 @@ public class MainNav extends Fragment implements TabLayout.OnTabSelectedListener
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+    private void showTooltipTabGroup(){
+        View mainTab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(0);
+        ShowTipsView showtips = new ShowTipsBuilder(getActivity())
+                .setTarget(mainTab)
+                .setTitle("Menu of Group")
+                .setDescription("You can see the groups available on this page including your own group.")
+                .setDelay(1000)
+                .displayOneTime(tooltipTabGroup)
+                .build();
+
+        showtips.show(getActivity());
+        showtips.setCallback(new ShowTipsViewInterface() {
+            @Override
+            public void gotItClicked() {
+                try {
+                    showToolTipTabContact();
+                }catch (Exception e){
+                    FirebaseCrash.report(e);
+                }
+
+            }
+        });
+    }
+    private void showToolTipTabContact(){
+        View mainTab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(1);
+        ShowTipsView showtips = new ShowTipsBuilder(getActivity())
+                .setTarget(mainTab)
+                .setTitle("Menu Kontak")
+                .setDescription("Daftar Kontak yang telah anda tambahkan")
+                .setDelay(1000)
+                .displayOneTime(tooltipTabContac)
+                .build();
+        showtips.show(getActivity());
     }
 }

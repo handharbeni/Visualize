@@ -1,24 +1,18 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -26,11 +20,12 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.firebase.crash.FirebaseCrash;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import org.json.JSONException;
-
-import java.lang.reflect.Field;
+import net.frederico.showtipsview.ShowTipsBuilder;
+import net.frederico.showtipsview.ShowTipsView;
+import net.frederico.showtipsview.ShowTipsViewInterface;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.databasemodule.GrupModel;
@@ -46,18 +41,24 @@ import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.Pla
 import io.realm.RealmResults;
 
 public class DetailGroup extends AppCompatActivity {
-    int PLACE_PICKER_REQUEST = 1;
-    private Integer RESULT_OK = -1, RESULT_CANCEL=0;
+    private static Integer TOOLTIP_MEMBER = 131;
+    private static Integer TOOLTIP_MAP = 132;
+    private static Integer TOOLTIP_MESSAGE = 133;
+    private static Integer TOOLTIP_DESTINATIONS = 134;
 
-    private static final String TAG = "DetailGrup";
+    private static Integer TOOLTIP_FAB_INVITE = 1311;
+    private static Integer TOOLTIP_FAB_CHAT = 1331;
+    private static Integer TOOLTIP_FAB_ADDDESTI = 1341;
+    private static Integer TOOLTIP_FAB_LISTDESTI = 1342;
+
+    int PLACE_PICKER_REQUEST = 1;
+    private Integer RESULT_OK = -1;
+
     private BottomNavigationViewEx navigation;
 
     private AdapterModel adapterModel;
 
     private Integer id;
-
-    private Fragment fragment;
-    private Bundle bundleFragment;
 
     private FloatingActionButton fabinvitemember, fabsendmessage, fabaddlocation, fabviewdestinations;
 
@@ -72,11 +73,12 @@ public class DetailGroup extends AppCompatActivity {
                 case R.id.navigation_member:
                     hideAllFab();
                     fabinvitemember.show();
-                    fragment = new MemberList();
-                    bundleFragment = new Bundle();
+                    Fragment fragment = new MemberList();
+                    Bundle bundleFragment = new Bundle();
                     bundleFragment.putInt("id", id);
                     fragment.setArguments(bundleFragment);
                     changeFragment(fragment);
+//                    showTooltipFabInvite();
                     return true;
                 case R.id.navigation_maps:
                     hideAllFab();
@@ -94,6 +96,7 @@ public class DetailGroup extends AppCompatActivity {
                     bundleFragment.putInt("id", id);
                     fragment.setArguments(bundleFragment);
                     changeFragment(fragment);
+//                    showTooltipFabChat();
                     return true;
                 case R.id.navigation_lokasi:
                     hideAllFab();
@@ -104,6 +107,7 @@ public class DetailGroup extends AppCompatActivity {
                     bundleFragment.putInt("id", id);
                     fragment.setArguments(bundleFragment);
                     changeFragment(fragment);
+//                    showTooltipFabAddDesti();
                     return true;
             }
             return false;
@@ -113,16 +117,23 @@ public class DetailGroup extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.__navactivity_mainnav_layout_detailgroup);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         fetch_modul();
         fetch_extras();
-        setContentView(R.layout.__navactivity_mainnav_layout_detailgroup);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fetch_title();
         fetch_element();
         fetch_event();
         fetch_startup();
+        showTooltipTabMember();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
     {
@@ -145,10 +156,11 @@ public class DetailGroup extends AppCompatActivity {
     }
     private void doInvite(){
         View v = dialogInvite.getCustomView();
+        assert v != null;
         EditText notelp = v.findViewById(R.id.notelpcontact);
         try {
             String response = adapterModel.invite_member(String.valueOf(id), notelp.getText().toString());
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -168,10 +180,11 @@ public class DetailGroup extends AppCompatActivity {
     }
     private void doSend(){
         View v = dialogSendChat.getCustomView();
+        assert v != null;
         EditText message = v.findViewById(R.id.sendmessage);
         try {
-            String response = adapterModel.send_message(String.valueOf(id), message.getText().toString());
-        } catch (JSONException e) {
+            adapterModel.send_message(String.valueOf(id), message.getText().toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -193,6 +206,7 @@ public class DetailGroup extends AppCompatActivity {
         try {
             String lokasi = null, latitude = null, longitude = null, prioritas = "0", type = null;
             View v = dialogAddLocation.getCustomView();
+            assert v != null;
             Spinner spinnerType = v.findViewById(R.id.spinnerType);
             EditText alamat = v.findViewById(R.id.alamat);
             TextView tlatitude = v.findViewById(R.id.latitude);
@@ -202,12 +216,13 @@ public class DetailGroup extends AppCompatActivity {
             latitude = tlatitude.getText().toString();
             longitude = tlongitude.getText().toString();
             adapterModel.add_location_grup(String.valueOf(id), lokasi, latitude, longitude, prioritas, type);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            FirebaseCrash.report(e);
         }
     }
     private void doPickLocation(String sAlamat, String sLatitude, String sLongitude){
         View v = dialogAddLocation.getCustomView();
+        assert v != null;
         EditText alamat = v.findViewById(R.id.alamat);
         TextView lati = v.findViewById(R.id.latitude);
         TextView longi = v.findViewById(R.id.longitude);
@@ -229,26 +244,7 @@ public class DetailGroup extends AppCompatActivity {
             id = b.getInt("id");
 
     }
-    @SuppressLint("RestrictedApi")
-    public static void disableShiftMode(BottomNavigationView view) {
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
-        try {
-            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
-            shiftingMode.setAccessible(true);
-            shiftingMode.setBoolean(menuView, false);
-            shiftingMode.setAccessible(false);
-            for (int i = 0; i < menuView.getChildCount(); i++) {
-                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
-                item.setShiftingMode(false);
-                // set once again checked value, so view will be updated
-                item.setChecked(item.getItemData().isChecked());
-            }
-        } catch (NoSuchFieldException e) {
-            //Timber.e(e, "Unable to get shift mode field");
-        } catch (IllegalAccessException e) {
-            //Timber.e(e, "Unable to change value of shift mode");
-        }
-    }
+
     private void fetch_modul(){
         adapterModel = new AdapterModel(getApplicationContext());
     }
@@ -266,7 +262,6 @@ public class DetailGroup extends AppCompatActivity {
         navigation.enableShiftingMode(false);
 
         navigation.setTextSize(12);
-//        disableShiftMode(navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     }
@@ -287,7 +282,6 @@ public class DetailGroup extends AppCompatActivity {
         fabaddlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                add_location();
                 placePicker();
             }
         });
@@ -301,16 +295,9 @@ public class DetailGroup extends AppCompatActivity {
                     }
                 });
 
-//                session.setCustomParams("id", String.valueOf(id));
-
                 Intent i = new Intent(getApplicationContext(), RouteDestinations.class);
-
-//                Bundle bundlex = new Bundle();
-//                bundlex.putString("key_id", String.valueOf(id));
                 i.putExtra("key_id", String.valueOf(id));
                 i.putExtra("key_id_int", id);
-//                i.putExtras(bundlex);
-
                 startActivity(i);
             }
         });
@@ -338,9 +325,9 @@ public class DetailGroup extends AppCompatActivity {
         try {
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
+            FirebaseCrash.report(e);
         } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
+            FirebaseCrash.report(e);
         }
     }
     @Override
@@ -351,14 +338,123 @@ public class DetailGroup extends AppCompatActivity {
                 Place place = PlacePicker.getPlace(this, data);
                 add_location();
                 doPickLocation(String.valueOf(place.getAddress()), String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude));
-
-//                session.setCustomParams(LATDESTI, String.valueOf(place.getLatLng().latitude));
-//                session.setCustomParams(LONGDESTI, String.valueOf(place.getLatLng().longitude));
-//                session.setCustomParams(ADDRESSDESTI, String.valueOf(place.getAddress()));
-//                session.setCustomParams(ZIPCODEDESTI, String.valueOf(place.getLocale()));
-//                calculateDistance();
             }
         }
     }
+    private void showTooltipTabMember(){
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(findViewById(R.id.navigation_member))
+                .setTitle("Menu of Member")
+                .setDescription("List of members that have been invited in this group.")
+                .setDelay(1000)
+                .displayOneTime(TOOLTIP_MEMBER)
+                .build();
+
+        showtips.show(this);
+        showtips.setCallback(new ShowTipsViewInterface() {
+            @Override
+            public void gotItClicked() {
+                showTooltipTabMaps();
+            }
+        });
+    }
+    private void showTooltipTabMaps(){
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(findViewById(R.id.navigation_maps))
+                .setTitle("Menu of Maps")
+                .setDescription("Track the location of each member in this group.")
+                .setDelay(1000)
+                .displayOneTime(TOOLTIP_MAP)
+                .build();
+
+        showtips.show(this);
+        showtips.setCallback(new ShowTipsViewInterface() {
+            @Override
+            public void gotItClicked() {
+                showTooltipChat();
+            }
+        });
+
+    }
+    private void showTooltipChat(){
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(findViewById(R.id.navigation_chat))
+                .setTitle("Menu of Chat")
+                .setDescription("Sending and receiving chats in this group.")
+                .setDelay(1000)
+                .displayOneTime(TOOLTIP_MESSAGE)
+                .build();
+
+        showtips.show(this);
+        showtips.setCallback(new ShowTipsViewInterface() {
+            @Override
+            public void gotItClicked() {
+                showTooltipDestination();
+            }
+        });
+
+    }
+    private void showTooltipDestination(){
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(findViewById(R.id.navigation_lokasi))
+                .setTitle("Menu of Destinations")
+                .setDescription("List of locations that will be the destination for the members in the group.")
+                .setDelay(1000)
+                .displayOneTime(TOOLTIP_DESTINATIONS)
+                .build();
+
+        showtips.show(this);
+    }
+    private void showTooltipFabInvite(){
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(findViewById(R.id.fabinvitemember))
+                .setTitle("Tambah Member")
+                .setDescription("Klik disini untuk mengundang member")
+                .setDelay(1000)
+                .displayOneTime(TOOLTIP_FAB_INVITE)
+                .build();
+
+        showtips.show(this);
+    }
+    private void showTooltipFabChat(){
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(findViewById(R.id.fabsendmessage))
+                .setTitle("Kirim Pesan")
+                .setDescription("Klik disini untuk saling mengirim pesan")
+                .setDelay(1000)
+                .displayOneTime(TOOLTIP_FAB_CHAT)
+                .build();
+
+        showtips.show(this);
+    }
+    private void showTooltipFabAddDesti(){
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(findViewById(R.id.fabaddlocation))
+                .setTitle("Tambah Tujuan")
+                .setDescription("Tambahkan lokasi tujuan disini")
+                .setDelay(1000)
+                .displayOneTime(TOOLTIP_FAB_ADDDESTI)
+                .build();
+
+        showtips.show(this);
+        showtips.setCallback(new ShowTipsViewInterface() {
+            @Override
+            public void gotItClicked() {
+                showTooltipFabListDesti();
+            }
+        });
+    }
+    private void showTooltipFabListDesti(){
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(findViewById(R.id.fabviewdestinations))
+                .setTitle("Daftar Lokasi Tujuan")
+                .setDescription("Melihat daftar tujuan di dalam maps dengan rute yang sudah tersedia")
+                .setDelay(1000)
+                .displayOneTime(TOOLTIP_FAB_LISTDESTI)
+                .build();
+
+        showtips.show(this);
+    }
+
 
 }

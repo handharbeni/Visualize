@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
     android:id="@+id/listparent"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:gravity="center">
-    <include layout="@layout/__navactivity_mainnav_itemlist_image"/>
-    <include layout="@layout/__navactivity_mainnav_itemlist_title"/>
-</LinearLayout>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgProfile"
+        layout="@layout/__navactivity_mainnav_itemlist_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/imgProfile"
+        app:layout_constraintRight_toLeftOf="@+id/imgDelete"
+        layout="@layout/__navactivity_mainnav_itemlist_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <include
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgDelete"
+        layout="@layout/__layout_icon_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98" />
+
+</android.support.constraint.ConstraintLayout>

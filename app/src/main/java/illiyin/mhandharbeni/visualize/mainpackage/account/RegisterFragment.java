@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.sessionlibrary.Session;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
@@ -30,22 +28,24 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
     private Button do_register;
 
     private AdapterModel adapterModel;
-    private Session session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fetch_modul();
-
         v = inflater.inflate(R.layout.__mainactivty_layout_register, container, false);
+        return v;
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        fetch_modul();
         fetch_element();
         fetch_event();
-        return v;
     }
 
     private void fetch_modul(){
         adapterModel = new AdapterModel(getActivity().getApplicationContext());
-        session = new Session(getActivity().getApplicationContext(), new SessionListener() {
+        Session session = new Session(getActivity().getApplicationContext(), new SessionListener() {
             @Override
             public void sessionChange() {
 
@@ -72,7 +72,7 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
                     try {
                         do_register.setEnabled(false);
                         doLogin();
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         do_register.setEnabled(true);
                         e.printStackTrace();
                     }
@@ -113,7 +113,7 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
         }
     }
 
-    private void doLogin() throws JSONException {
+    private void doLogin() throws Exception {
         String response = adapterModel.register(nama.getText().toString(), alamat.getText().toString(), notelp.getText().toString(), username.getText().toString(), password.getText().toString());
         if (response.equalsIgnoreCase(getString(R.string.placeholder_loginberhasil))){
             /* set state login */

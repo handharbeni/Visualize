@@ -4,6 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import org.json.JSONException;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
@@ -30,8 +32,8 @@ public class GrupService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         try {
             adapterModel.syncGrup();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            FirebaseCrash.report(e);
         }
     }
 }

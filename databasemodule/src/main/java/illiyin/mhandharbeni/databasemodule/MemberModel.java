@@ -11,14 +11,17 @@ public class MemberModel extends RealmObject {
     @PrimaryKey
     int id;
 
-    int id_grup;
-    int id_user;
-    String nama, alamat, no_telp, email, image, sha;
+    private int id_grup;
+    private int id_user;
+    private String nama, alamat, no_telp, email, image, sha;
+    private String type_member;
+
+
 
     public MemberModel() {
     }
 
-    public MemberModel(int id, int id_grup, int id_user, String nama, String alamat, String no_telp, String email, String image, String sha) {
+    public MemberModel(int id, int id_grup, int id_user, String nama, String alamat, String no_telp, String email, String image, String sha, String type_member) {
         this.id = id;
         this.id_grup = id_grup;
         this.id_user = id_user;
@@ -28,6 +31,15 @@ public class MemberModel extends RealmObject {
         this.email = email;
         this.image = image;
         this.sha = sha;
+        this.type_member = type_member;
+    }
+
+    public String getType_member() {
+        return type_member;
+    }
+
+    public void setType_member(String type_member) {
+        this.type_member = type_member;
     }
 
     public int getId() {

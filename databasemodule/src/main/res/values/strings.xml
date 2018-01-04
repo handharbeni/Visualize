@@ -8,6 +8,8 @@
     <string name="endpoint_creategrup">user/creategrup</string>
     <string name="endpoint_updategrup">user/updategrup</string>
     <string name="endpoint_deletegrup">user/deletegrup</string>
+    <string name="endpoint_deletedestinasigrup">user/deletedestination</string>
+    <string name="endpoint_deletecontact">user/deletecontact</string>
     <string name="endpoint_sendmessagegrup">user/sentchat</string>
     <string name="endpoint_senglocationgrup">user/sendlocation</string>
     <string name="endpoint_invitemembergrup">user/invitemember</string>
@@ -18,7 +20,11 @@
     <string name="endpoint_listcontact">user/listcontact</string>
     <string name="endpoint_getchatgrup">user/listchat</string>
     <string name="endpoint_addcontact">user/addcontact</string>
+    <string name="endpoint_changepassword">user/updatepassword</string>
+    <string name="endpoint_updateprofile">user/updateprofile</string>
+    <string name="endpoint_uploadimage">user/upload</string>
     <string name="endpoint_locationmember">user/locationmembergrup</string>
     <string name="endpoint_listmember">user/listmember</string>
+    <string name="endpoint_loginberhasil">Login Success</string>
     <!--<string name="endpoint_getlocationgrup">user/listgrup</string>-->
 </resources>
