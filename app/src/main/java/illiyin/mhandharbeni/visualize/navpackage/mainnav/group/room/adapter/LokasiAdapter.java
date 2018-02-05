@@ -39,12 +39,7 @@ public class LokasiAdapter extends RealmBasedRecyclerViewAdapter<GrupLocationMod
         assert m != null;
         myViewHolder.nama_lokasi.setText(m.getNama_lokasi());
         myViewHolder.prioritas_lokasi.setText(String.valueOf(m.getPrioritas()));
-        myViewHolder.iconDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteItem.onConfirmDelete(m.getId(), "Hapus Destinasi Grup?");
-            }
-        });
+        myViewHolder.iconDelete.setOnClickListener(v -> deleteItem.onConfirmDelete(m.getId(), "Are you sure to delete this Place / Location?"));
     }
 
     class MyViewHolder extends RealmViewHolder {

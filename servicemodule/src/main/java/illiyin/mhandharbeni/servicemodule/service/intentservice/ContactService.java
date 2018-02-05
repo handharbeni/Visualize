@@ -5,10 +5,7 @@ import android.content.Intent;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.json.JSONException;
-
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
-import illiyin.mhandharbeni.servicemodule.service.MainService;
 
 /**
  * Created by root on 9/21/17.

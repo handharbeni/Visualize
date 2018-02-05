@@ -2,16 +2,10 @@ package illiyin.mhandharbeni.servicemodule.service.intentservice;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.json.JSONException;
-
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
-import illiyin.mhandharbeni.servicemodule.service.MainService;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by root on 17/07/17.
@@ -21,6 +15,11 @@ public class GrupService extends IntentService {
     AdapterModel adapterModel;
     public GrupService() {
         super("Grup Service");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
     }
 
     @Override

@@ -2,21 +2,16 @@ package illiyin.mhandharbeni.utilslibrary;
 
 import android.content.Context;
 import android.location.Geocoder;
-import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 import illiyin.mhandharbeni.networklibrary.CallHttp;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by root on 06/08/17.

@@ -28,16 +28,16 @@ import net.frederico.showtipsview.ShowTipsView;
 import net.frederico.showtipsview.ShowTipsViewInterface;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
+import illiyin.mhandharbeni.sessionlibrary.SessionListener;
+import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MemberList;
+import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.PlaceList;
 import illiyin.mhandharbeni.databasemodule.GrupModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.sessionlibrary.Session;
-import illiyin.mhandharbeni.sessionlibrary.SessionListener;
 import illiyin.mhandharbeni.visualize.R;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.activity.RouteDestinations;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.ChatList;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MapsList;
-import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.MemberList;
-import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment.PlaceList;
 import io.realm.RealmResults;
 
 public class DetailGroup extends AppCompatActivity {

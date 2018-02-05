@@ -19,20 +19,10 @@ public class MemberLocationModel extends RealmObject {
     private String longitude;
     private String sha;
     private String type_member;
+    private String date_modified;
+    private String no_telp;
 
     public MemberLocationModel() {
-    }
-
-    public MemberLocationModel(int id, int id_grup, int id_user, String nama, String image, String latitude, String longitude, String sha, String type_member) {
-        this.id = id;
-        this.id_grup = id_grup;
-        this.id_user = id_user;
-        this.nama = nama;
-        this.image = image;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.sha = sha;
-        this.type_member = type_member;
     }
 
     public String getType_member() {
@@ -105,5 +95,21 @@ public class MemberLocationModel extends RealmObject {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getDate_modified() {
+        return date_modified;
+    }
+
+    public void setDate_modified(String date_modified) {
+        this.date_modified = date_modified;
+    }
+
+    public String getNo_telp() {
+        return no_telp;
+    }
+
+    public void setNo_telp(String no_telp) {
+        this.no_telp = no_telp;
     }
 }

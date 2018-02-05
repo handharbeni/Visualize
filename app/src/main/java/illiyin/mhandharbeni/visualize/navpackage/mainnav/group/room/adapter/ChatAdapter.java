@@ -10,11 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import illiyin.mhandharbeni.databasemodule.ChatModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.sessionlibrary.Session;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
-import illiyin.mhandharbeni.visualize.R;
+import illiyin.mhandharbeni.databasemodule.ChatModel;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
@@ -31,7 +30,7 @@ public class ChatAdapter extends RealmBasedRecyclerViewAdapter<ChatModel, ChatAd
 
     @Override
     public ChatAdapter.MyViewHolder onCreateRealmViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = inflater.inflate(R.layout.__navactivity_mainnav_itemchat, viewGroup, false);
+        View v = inflater.inflate(illiyin.mhandharbeni.visualize.R.layout.__navactivity_mainnav_itemchat, viewGroup, false);
         return new ChatAdapter.MyViewHolder((LinearLayout) v);
     }
 
@@ -59,12 +58,12 @@ public class ChatAdapter extends RealmBasedRecyclerViewAdapter<ChatModel, ChatAd
         TextView contentmessageleft, contentmessageright;
         MyViewHolder(LinearLayout container) {
             super(container);
-            this.layoutfrom= container.findViewById(R.id.layoutfrom);
-            this.layoutme = container.findViewById(R.id.layoutme);
-            this.imagemessageleft = container.findViewById(R.id.imagemessageleft);
-            this.imagemessageright = container.findViewById(R.id.imagemessageright);
-            this.contentmessageleft = container.findViewById(R.id.contentmessageleft);
-            this.contentmessageright = container.findViewById(R.id.contentmessageright);
+            this.layoutfrom= container.findViewById(illiyin.mhandharbeni.visualize.R.id.layoutfrom);
+            this.layoutme = container.findViewById(illiyin.mhandharbeni.visualize.R.id.layoutme);
+            this.imagemessageleft = container.findViewById(illiyin.mhandharbeni.visualize.R.id.imagemessageleft);
+            this.imagemessageright = container.findViewById(illiyin.mhandharbeni.visualize.R.id.imagemessageright);
+            this.contentmessageleft = container.findViewById(illiyin.mhandharbeni.visualize.R.id.contentmessageleft);
+            this.contentmessageright = container.findViewById(illiyin.mhandharbeni.visualize.R.id.contentmessageright);
         }
     }
     public ChatAdapter(Context context, RealmResults<ChatModel> realmResults, boolean automaticUpdate) {

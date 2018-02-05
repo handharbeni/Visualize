@@ -20,21 +20,11 @@ public class GrupModel extends RealmObject {
     private String deleted;
     private int kuota_free;
     private String sha;
+    private String sha_grup;
+    private String nama_user;
+    private String confirmation;
 
     public GrupModel() {
-    }
-
-    public GrupModel(int id, String nama_grup, int id_user, int masa_aktif, String date_add, String date_end, int paid, String deleted, int kuota_free, String sha) {
-        this.id = id;
-        this.nama_grup = nama_grup;
-        this.id_user = id_user;
-        this.masa_aktif = masa_aktif;
-        this.date_add = date_add;
-        this.date_end = date_end;
-        this.paid = paid;
-        this.deleted = deleted;
-        this.kuota_free = kuota_free;
-        this.sha = sha;
     }
 
     public int getId() {
@@ -115,5 +105,29 @@ public class GrupModel extends RealmObject {
 
     public void setSha(String sha) {
         this.sha = sha;
+    }
+
+    public String getNama_user() {
+        return nama_user;
+    }
+
+    public void setNama_user(String nama_user) {
+        this.nama_user = nama_user;
+    }
+
+    public String getConfirmation() {
+        return confirmation;
+    }
+
+    public void setConfirmation(String confirmation) {
+        this.confirmation = confirmation;
+    }
+
+    public String getSha_grup() {
+        return sha_grup;
+    }
+
+    public void setSha_grup(String sha_grup) {
+        this.sha_grup = sha_grup;
     }
 }

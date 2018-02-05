@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide;
 
 import illiyin.mhandharbeni.databasemodule.ContactModel;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
-import illiyin.mhandharbeni.visualize.R;
 import illiyin.mhandharbeni.visualize.utils.DeleteItem;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
@@ -28,7 +27,7 @@ public class ContactAdapter extends RealmBasedRecyclerViewAdapter<ContactModel, 
     @Override
     public ContactAdapter.MyViewHolder onCreateRealmViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v;
-        v = inflater.inflate(R.layout.__navactivity_mainnav_itemlist, viewGroup, false);
+        v = inflater.inflate(illiyin.mhandharbeni.visualize.R.layout.__navactivity_mainnav_itemlist, viewGroup, false);
         return new ContactAdapter.MyViewHolder((ConstraintLayout) v);
     }
 
@@ -45,7 +44,7 @@ public class ContactAdapter extends RealmBasedRecyclerViewAdapter<ContactModel, 
         myViewHolder.iconDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteItem.onConfirmDelete(m.getId(), "Yakin akan Hapus Contact?");
+                deleteItem.onConfirmDelete(m.getId(), "Are you sure want to remove this contact?");
             }
         });
     }
@@ -61,11 +60,11 @@ public class ContactAdapter extends RealmBasedRecyclerViewAdapter<ContactModel, 
         ImageView iconDelete;
         MyViewHolder(ConstraintLayout container) {
             super(container);
-            this.listparent = container.findViewById(R.id.listparent);
-            this.image = container.findViewById(R.id.image);
-            this.title = container.findViewById(R.id.title);
-            this.subtitle = container.findViewById(R.id.subtitle);
-            this.iconDelete = container.findViewById(R.id.iconDelete);
+            this.listparent = container.findViewById(illiyin.mhandharbeni.visualize.R.id.listparent);
+            this.image = container.findViewById(illiyin.mhandharbeni.visualize.R.id.image);
+            this.title = container.findViewById(illiyin.mhandharbeni.visualize.R.id.title);
+            this.subtitle = container.findViewById(illiyin.mhandharbeni.visualize.R.id.subtitle);
+            this.iconDelete = container.findViewById(illiyin.mhandharbeni.visualize.R.id.iconDelete);
         }
     }
     public ContactAdapter(Context context, RealmResults<ContactModel> realmResults, boolean automaticUpdate, DeleteItem deleteItem) {

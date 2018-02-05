@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView
-        app:rrvIsRefreshable="false"
-        app:rrvLayoutType="LinearLayout"
-        app:rrvEmptyLayoutId="@layout/empty_layout"
         android:id="@+id/listchat"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingTop="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
-    </co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView>
+        app:layout_constraintVertical_bias="0.5"
+        app:rrvEmptyLayoutId="@layout/empty_layout"
+        app:rrvIsRefreshable="false"
+        app:rrvLayoutType="LinearLayout"></co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView>
 </android.support.constraint.ConstraintLayout>

@@ -10,15 +10,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crash.FirebaseCrash;
-
-import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
@@ -35,10 +33,6 @@ import illiyin.mhandharbeni.visualize.MainActivity;
 import illiyin.mhandharbeni.visualize.R;
 import illiyin.mhandharbeni.visualize.utils.ProgressRequestBody;
 import illiyin.mhandharbeni.visualize.utils.TaskListener;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MultipartBody;
-import okhttp3.Response;
 
 /**
  * Created by root on 12/27/17.
@@ -53,7 +47,7 @@ public class ImageProfile extends AppCompatActivity implements TaskListener, Pro
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.__navactivity_mainnav_imageprofile);
+        setContentView(illiyin.mhandharbeni.visualize.R.layout.__navactivity_mainnav_imageprofile);
     }
 
     @Override
@@ -64,14 +58,14 @@ public class ImageProfile extends AppCompatActivity implements TaskListener, Pro
     }
 
     private void fetch_component(){
-        CircleImageView imageProfile = (CircleImageView) findViewById(R.id.imageProfile);
+        CircleImageView imageProfile = (CircleImageView) findViewById(illiyin.mhandharbeni.visualize.R.id.imageProfile);
         Glide.with(this)
                 .load(
                         session.getCustomParams(
                                 Session.IMAGE,
                                 "http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png"))
                 .into(imageProfile)
-                .onLoadFailed(getResources().getDrawable(R.drawable.ic_launcher));
+                .onLoadFailed(getResources().getDrawable(illiyin.mhandharbeni.visualize.R.drawable.ic_launcher));
 
         imageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +153,11 @@ public class ImageProfile extends AppCompatActivity implements TaskListener, Pro
 //        });
 //    }
     private void fetch_module(){
+        MobileAds.initialize(this, getString(R.string.admobid));
+        AdView adView = new AdView(this);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(R.string.admobunit);
+
         dialog = new ProgressDialog(this);
         adapterModel = new AdapterModel(this);
         session = new Session(this, new SessionListener() {

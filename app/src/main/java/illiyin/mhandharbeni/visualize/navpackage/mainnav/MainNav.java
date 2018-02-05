@@ -1,7 +1,6 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -10,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crash.FirebaseCrash;
 import com.h6ah4i.android.tablayouthelper.TabLayoutHelper;
 
 import net.frederico.showtipsview.ShowTipsBuilder;
 import net.frederico.showtipsview.ShowTipsView;
-import net.frederico.showtipsview.ShowTipsViewInterface;
 
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.sessionlibrary.Session;
@@ -59,6 +58,11 @@ public class MainNav extends Fragment implements TabLayout.OnTabSelectedListener
     }
 
     private void fetch_module(){
+        MobileAds.initialize(this, getString(R.string.admobid));
+        AdView adView = new AdView(this);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(R.string.admobunit);
+
         session = new Session(getActivity().getApplicationContext(), new SessionListener() {
             @Override
             public void sessionChange() {
@@ -115,16 +119,13 @@ public class MainNav extends Fragment implements TabLayout.OnTabSelectedListener
                 .build();
 
         showtips.show(getActivity());
-        showtips.setCallback(new ShowTipsViewInterface() {
-            @Override
-            public void gotItClicked() {
-                try {
-                    showToolTipTabContact();
-                }catch (Exception e){
-                    FirebaseCrash.report(e);
-                }
-
+        showtips.setCallback(() -> {
+            try {
+                showToolTipTabContact();
+            }catch (Exception e){
+                FirebaseCrash.report(e);
             }
+
         });
     }
     private void showToolTipTabContact(){

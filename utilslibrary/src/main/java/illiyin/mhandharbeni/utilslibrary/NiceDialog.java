@@ -2,7 +2,6 @@ package illiyin.mhandharbeni.utilslibrary;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Toast;
 
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;

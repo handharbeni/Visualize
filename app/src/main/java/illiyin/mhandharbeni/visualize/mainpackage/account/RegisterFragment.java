@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.MobileAds;
+
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.sessionlibrary.Session;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
@@ -31,7 +33,7 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.__mainactivty_layout_register, container, false);
+        v = inflater.inflate(illiyin.mhandharbeni.visualize.R.layout.__mainactivty_layout_register, container, false);
         return v;
     }
 
@@ -44,6 +46,11 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
     }
 
     private void fetch_modul(){
+        MobileAds.initialize(this, getString(R.string.admobid));
+        AdView adView = new AdView(this);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(R.string.admobunit);
+
         adapterModel = new AdapterModel(getActivity().getApplicationContext());
         Session session = new Session(getActivity().getApplicationContext(), new SessionListener() {
             @Override
@@ -54,13 +61,13 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
     }
 
     private void fetch_element(){
-        nama = v.findViewById(R.id.nama);
-        alamat = v.findViewById(R.id.alamat);
-        notelp = v.findViewById(R.id.notelp);
-        username = v.findViewById(R.id.username);
-        password = v.findViewById(R.id.password);
-        do_register = v.findViewById(R.id.do_register);
-        tologin= v.findViewById(R.id.txttologin);
+        nama = v.findViewById(illiyin.mhandharbeni.visualize.R.id.nama);
+        alamat = v.findViewById(illiyin.mhandharbeni.visualize.R.id.alamat);
+        notelp = v.findViewById(illiyin.mhandharbeni.visualize.R.id.notelp);
+        username = v.findViewById(illiyin.mhandharbeni.visualize.R.id.username);
+        password = v.findViewById(illiyin.mhandharbeni.visualize.R.id.password);
+        do_register = v.findViewById(illiyin.mhandharbeni.visualize.R.id.do_register);
+        tologin= v.findViewById(illiyin.mhandharbeni.visualize.R.id.txttologin);
     }
 
     private void fetch_event(){
@@ -89,23 +96,23 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
 
     private Boolean validate(){
         if(nama.getText().toString().isEmpty()){
-            nama.setError(getString(R.string.placeholder_textkosong));
+            nama.setError(getString(illiyin.mhandharbeni.visualize.R.string.placeholder_textkosong));
             nama.requestFocus();
             return false;
         }else if(alamat.getText().toString().isEmpty()){
-            alamat.setError(getString(R.string.placeholder_textkosong));
+            alamat.setError(getString(illiyin.mhandharbeni.visualize.R.string.placeholder_textkosong));
             alamat.requestFocus();
             return false;
         }else if(notelp.getText().toString().isEmpty()){
-            notelp.setError(getString(R.string.placeholder_textkosong));
+            notelp.setError(getString(illiyin.mhandharbeni.visualize.R.string.placeholder_textkosong));
             notelp.requestFocus();
             return false;
         }else if (username.getText().toString().isEmpty()){
-            username.setError(getString(R.string.placeholder_textkosong));
+            username.setError(getString(illiyin.mhandharbeni.visualize.R.string.placeholder_textkosong));
             username.requestFocus();
             return false;
         }else if(password.getText().toString().isEmpty()){
-            password.setError(getString(R.string.placeholder_textkosong));
+            password.setError(getString(illiyin.mhandharbeni.visualize.R.string.placeholder_textkosong));
             password.requestFocus();
             return false;
         }else{
@@ -115,7 +122,7 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
 
     private void doLogin() throws Exception {
         String response = adapterModel.register(nama.getText().toString(), alamat.getText().toString(), notelp.getText().toString(), username.getText().toString(), password.getText().toString());
-        if (response.equalsIgnoreCase(getString(R.string.placeholder_loginberhasil))){
+        if (response.equalsIgnoreCase(getString(illiyin.mhandharbeni.visualize.R.string.placeholder_loginberhasil))){
             /* set state login */
             do_register.setEnabled(true);
         }else{
@@ -139,7 +146,7 @@ public class RegisterFragment extends Fragment implements SnackBarListener {
     }
     private void changeFragment(Fragment fragment){
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.mainframe, fragment);
+        fragmentTransaction.replace(illiyin.mhandharbeni.visualize.R.id.mainframe, fragment);
         fragmentTransaction.commit();
     }
 }

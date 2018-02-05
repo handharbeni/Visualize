@@ -48,6 +48,7 @@ public class AdapterModel implements SessionListener{
     private String endpoint_sentchat;
     private String endpoint_sentlocationgroup;
     private String endpoint_getlocationgroup;
+    private String endpoint_deletemember;
 
     private String endpoint_login;
     private String endpoint_register;
@@ -91,6 +92,7 @@ public class AdapterModel implements SessionListener{
         endpoint_upload= server+""+context.getString(R.string.endpoint_uploadimage);
         endpoint_sentlocationgroup = server+context.getString(R.string.endpoint_setlocation);
         endpoint_getlocationgroup = server+context.getString(R.string.endpoint_getlocation);
+        endpoint_deletemember = server+context.getString(R.string.endpoint_deletemember);
     }
     @Override
     public void sessionChange() {
@@ -215,14 +217,17 @@ public class AdapterModel implements SessionListener{
                                 String paid = objectData.getString("paid");
                                 String deleted = objectData.getString("deleted");
                                 String kuota_free = objectData.getString("kuota_free");
+                                String sha_grup = objectData.getString("sha_grup");
                                 String sha = objectData.getString("sha");
+                                String nama_user = objectData.getString("nama_user");
+                                String confirmation = objectData.getString("confirmation");
 
                                 RealmResults results = crud.read("id", Integer.valueOf(objectData.getString("id")));
                                 if (results.size() > 0){
                                 /*check sha*/
                                     GrupModel oGm = (GrupModel) results.get(0);
                                     assert oGm != null;
-                                    if (!oGm.getSha().equalsIgnoreCase(sha)){
+                                    if (!oGm.getSha_grup().equals(sha_grup) || !oGm.getSha().equalsIgnoreCase(sha)){
                                     /*update data*/
                                         crud.openObject();
                                         oGm.setNama_grup(nama_grup);
@@ -234,6 +239,9 @@ public class AdapterModel implements SessionListener{
                                         oGm.setDeleted(deleted);
                                         oGm.setKuota_free(Integer.valueOf(kuota_free.split("#")[1]));
                                         oGm.setSha(sha);
+                                        oGm.setNama_user(nama_user);
+                                        oGm.setConfirmation(confirmation);
+                                        oGm.setSha_grup(sha_grup);
                                         crud.update(oGm);
                                         crud.commitObject();
                                     }
@@ -250,6 +258,9 @@ public class AdapterModel implements SessionListener{
                                     nGm.setDeleted(deleted);
                                     nGm.setKuota_free(Integer.valueOf(kuota_free.split("#")[1]));
                                     nGm.setSha(sha);
+                                    nGm.setNama_user(nama_user);
+                                    nGm.setConfirmation(confirmation);
+                                    nGm.setSha_grup(sha_grup);
                                     crud.create(nGm);
                                 }
                             }
@@ -306,17 +317,19 @@ public class AdapterModel implements SessionListener{
                                             MemberModel updateMM = (MemberModel) resultMM.get(0);
                                             assert updateMM != null;
                                             if (!updateMM.getSha().equalsIgnoreCase(sha)){
-                                                crudMM.openObject();
-                                                updateMM.setNama(nama);
-                                                updateMM.setAlamat(alamat);
-                                                updateMM.setNo_telp(no_telp);
-                                                updateMM.setEmail(email);
-                                                updateMM.setImage(image);
-                                                updateMM.setType_member(type_user);
-                                                updateMM.setSha(sha);
-                                                crudMM.update(updateMM);
-                                                crudMM.commitObject();
-                                                crudMM.closeRealm();
+                                                if (crudMM.getRealmObject().isValid()){
+                                                    crudMM.openObject();
+                                                    updateMM.setNama(nama);
+                                                    updateMM.setAlamat(alamat);
+                                                    updateMM.setNo_telp(no_telp);
+                                                    updateMM.setEmail(email);
+                                                    updateMM.setImage(image);
+                                                    updateMM.setType_member(type_user);
+                                                    updateMM.setSha(sha);
+                                                    crudMM.update(updateMM);
+                                                    crudMM.commitObject();
+                                                    crudMM.closeRealm();
+                                                }
                                             }
                                         }else{
                                             MemberModel newMM = new MemberModel();
@@ -381,6 +394,9 @@ public class AdapterModel implements SessionListener{
                                         String longitude = objectData.getString("longitude");
                                         String type_user = objectData.getString("type_user");
                                         String sha = objectData.getString("sha");
+                                        String date_modified = objectData.getString("date_modified");
+                                        String no_telp = objectData.getString("no_telp");
+
                                         MemberLocationModel mlm = new MemberLocationModel();
                                         Crud crudMLM = new Crud(context, mlm);
                                         RealmResults resultsMLM = crudMLM.read("id", Integer.valueOf(id_grup+""+id));
@@ -396,6 +412,8 @@ public class AdapterModel implements SessionListener{
                                                 updateLocation.setLongitude(longitude);
                                                 updateLocation.setType_member(type_user);
                                                 updateLocation.setSha(sha);
+                                                updateLocation.setDate_modified(date_modified);
+                                                updateLocation.setNo_telp(no_telp);
                                                 crudMLM.update(updateLocation);
                                                 crudMLM.commitObject();
                                                 session.setCustomParams("CHANGELOCATION", sha);
@@ -413,6 +431,8 @@ public class AdapterModel implements SessionListener{
                                             newMLM.setLongitude(longitude);
                                             newMLM.setType_member(type_user);
                                             newMLM.setSha(sha);
+                                            newMLM.setDate_modified(date_modified);
+                                            newMLM.setNo_telp(no_telp);
                                             crudMLM.create(newMLM);
                                             crudMLM.closeRealm();
                                         }
@@ -742,6 +762,27 @@ public class AdapterModel implements SessionListener{
         }
         return returns;
     }
+    public String delete_membergrup(String id_grup, String id_user) throws Exception {
+        String returns = "Cannot Remove Member, Please Try Again";
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("key", session.getToken())
+                .addFormDataPart("id_grup", id_grup)
+                .addFormDataPart("id_user", id_user)
+                .build();
+        String response;
+        try{
+            response = callHttp.post(endpoint_deletemember, requestBody);
+            JSONObject objectResponse = new JSONObject(response);
+            if (objectResponse.getInt("code")==300){
+                returns = "Successfully remove member";
+            }
+        }catch(Exception e) {
+            FirebaseCrash.report(e);
+            returns = "Cannot Remove Member, Please Try Again";
+        }
+        return returns;
+    }
     public String delete_destinasi_grup(String id_destinasi) throws Exception {
         String returns = "Destinasi Grup Gagal dihapus";
         RequestBody requestBody = new MultipartBody.Builder()
@@ -804,7 +845,7 @@ public class AdapterModel implements SessionListener{
         return returns;
     }
     public String send_location(String latitude, String longitude) throws Exception {
-        String returns;
+        String returns = "Gagal Mengirim Lokasi Terkini";
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("key", session.getToken())
@@ -814,10 +855,14 @@ public class AdapterModel implements SessionListener{
         String response;
         try{
             response = callHttp.post(endpoint_senglocationgrup, requestBody);
-            returns = response;
-            JSONObject objectResponse = new JSONObject(response);
-            if (objectResponse.getInt("code")==300){
-                returns = "Lokasi anda terkirim.";
+            if (response != null){
+                returns = response;
+                JSONObject objectResponse = new JSONObject(response);
+                if (objectResponse != null){
+                    if (objectResponse.getInt("code")==300){
+                        returns = "Lokasi anda terkirim.";
+                    }
+                }
             }
         }catch(Exception e) {
             FirebaseCrash.report(e);

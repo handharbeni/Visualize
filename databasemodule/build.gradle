@@ -2,17 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
     buildToolsVersion '27.0.2'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 1
         versionName "1.1"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         release {
@@ -21,11 +18,10 @@ android {
         }
     }
 }
-
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':realmlibrary')
-    implementation project(path: ':networklibrary')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(path: ':realmlibrary')
+    compile project(path: ':networklibrary')
     compile project(path: ':sessionlibrary')
     implementation 'com.google.firebase:firebase-crash:11.8.0'
 }

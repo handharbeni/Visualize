@@ -19,9 +19,6 @@ public class WelcomeScreen extends WelcomeActivity {
     protected WelcomeConfiguration configuration() {
         return new WelcomeConfiguration.Builder(this)
                 .defaultBackgroundColor(R.color.slide1)
-//                .page(new TitlePage(R.drawable.slide_1, "").background(R.color.slide1))
-//                .page(new BasicPage(R.drawable.slide_2, "", "").background(R.color.slide2))
-//                .page(new BasicPage(R.drawable.slide_3,"", "").background(R.color.slide3))
                 .page(new FragmentWelcomePage() {
                     @Override
                     protected Fragment fragment() {

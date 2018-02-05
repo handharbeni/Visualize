@@ -7,27 +7,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.stephentuso.welcome.WelcomeHelper;
-
 import illiyin.mhandharbeni.visualize.mainpackage.account.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
     private Fragment fragment;
-    private WelcomeHelper welcomeHelper;
+//    private WelcomeHelper welcomeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        welcomeHelper = new WelcomeHelper(this, WelcomeScreen.class);
-        welcomeHelper.show(savedInstanceState);
+//        welcomeHelper = new WelcomeHelper(this, WelcomeScreen.class);
+//        welcomeHelper.show(savedInstanceState);
 
         init_fragment();
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        welcomeHelper.onSaveInstanceState(outState);
+//        welcomeHelper.onSaveInstanceState(outState);
     }
 
     private void init_fragment(){

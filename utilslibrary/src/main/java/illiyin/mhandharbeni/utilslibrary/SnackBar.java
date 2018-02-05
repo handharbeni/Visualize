@@ -1,7 +1,6 @@
 package illiyin.mhandharbeni.utilslibrary;
 
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.View;

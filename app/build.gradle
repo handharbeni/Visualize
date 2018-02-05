@@ -12,19 +12,19 @@ android {
         }
     }
     compileSdkVersion 26
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "illiyin.mhandharbeni.visualize"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 3
+        versionName "1.2"
         vectorDrawables.useSupportLibrary = true
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
-            debuggable true
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
@@ -34,10 +34,15 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    productFlavors {
+    }
 }
-
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -45,15 +50,16 @@ dependencies {
     implementation 'com.android.support:support-vector-drawable:26.1.0'
     implementation 'com.android.support:cardview-v7:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation project(path: ':realmlibrary')
-    implementation project(path: ':networklibrary')
-    implementation project(path: ':sessionlibrary')
-    implementation project(path: ':databasemodule')
+    compile project(path: ':realmlibrary')
+    compile project(path: ':networklibrary')
+    compile project(path: ':sessionlibrary')
+    compile project(path: ':databasemodule')
+    compile project(path: ':servicemodule')
+    compile project(path: ':utilslibrary')
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
     implementation 'com.google.android.gms:play-services-location:11.8.0'
     implementation 'com.google.android.gms:play-services-places:11.8.0'
     implementation 'com.google.firebase:firebase-crash:11.8.0'
-
     implementation 'com.h6ah4i.android.tablayouthelper:tablayouthelper:0.8.0'
     implementation 'com.github.bumptech.glide:glide:4.4.0'
     implementation 'com.github.thorbenprimke:realm-recyclerview:0.9.25'
@@ -63,11 +69,11 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'illiyin.mhandharbeni.libraryroute:libraryroute:0.0.3'
-    implementation project(path: ':servicemodule')
-    implementation project(path: ':utilslibrary')
     implementation 'net.fredericosilva:showTipsView:1.0.4'
     implementation 'com.stephentuso:welcome:1.4.1'
     implementation 'com.github.quentin7b:android-location-tracker:3.2'
+    implementation 'com.google.android.gms:play-services-ads:11.8.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
 configurations.all {

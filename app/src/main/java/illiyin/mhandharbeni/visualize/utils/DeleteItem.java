@@ -6,4 +6,5 @@ package illiyin.mhandharbeni.visualize.utils;
 
 public interface DeleteItem {
     void onConfirmDelete(int id, String message);
+    void onConfirmGrup(int id, String message);
 }

@@ -23,21 +23,14 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.crash.FirebaseCrash;
 
-import java.util.ArrayList;
-
+import illiyin.mhandharbeni.realmlibrary.Crud;
 import fr.quentinklein.slt.LocationTracker;
-import fr.quentinklein.slt.TrackerSettings;
-import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.databasemodule.GrupLocationModel;
 import illiyin.mhandharbeni.libraryroute.Navigation;
-import illiyin.mhandharbeni.realmlibrary.Crud;
-import illiyin.mhandharbeni.visualize.R;
 import io.realm.RealmResults;
 
-public class RouteDestinations extends AppCompatActivity implements OnMapReadyCallback {
+public class RouteDestinations extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
 
     private GoogleMap mMap;
     protected LatLng start;
@@ -52,7 +45,7 @@ public class RouteDestinations extends AppCompatActivity implements OnMapReadyCa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_route_destinations);
+        setContentView(illiyin.mhandharbeni.visualize.R.layout.activity_route_destinations);
     }
 
     @Override
@@ -63,9 +56,8 @@ public class RouteDestinations extends AppCompatActivity implements OnMapReadyCa
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(illiyin.mhandharbeni.visualize.R.id.map);
         mapFragment.getMapAsync(this);
-        startTracking();
     }
 
     @Override
@@ -78,6 +70,7 @@ public class RouteDestinations extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         fetch_data();
+        enableMyLocation();
     }
 
     private void fetch_modul() {
@@ -122,8 +115,8 @@ public class RouteDestinations extends AppCompatActivity implements OnMapReadyCa
         nav.find(
                 true,
                 false,
-                bitmapDescriptorFromVector(getApplicationContext(), R.drawable.ic_place_destinations_png),
-                bitmapDescriptorFromVector(getApplicationContext(), R.drawable.ic_place_destinations_png)
+                bitmapDescriptorFromVector(getApplicationContext(), illiyin.mhandharbeni.visualize.R.drawable.ic_place_destinations_png),
+                bitmapDescriptorFromVector(getApplicationContext(), illiyin.mhandharbeni.visualize.R.drawable.ic_place_destinations_png)
         );
     }
 
@@ -147,34 +140,8 @@ public class RouteDestinations extends AppCompatActivity implements OnMapReadyCa
 
         mMap.animateCamera(cu);
     }
-    private void createMarker(LatLng latLng){
-        mMap.addMarker(new MarkerOptions().position(latLng));
-    }
-    private void startTracking() {
-        TrackerSettings settings =
-                new TrackerSettings()
-                        .setUseGPS(true)
-                        .setUseNetwork(true)
-                        .setUsePassive(false)
-                        .setTimeBetweenUpdates(100)
-                        .setMetersBetweenUpdates(5);
-        tracker = new LocationTracker(getBaseContext(), settings) {
 
-            @Override
-            public void onLocationFound(@NonNull Location location) {
-                try {
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    createMarker(latLng);
-                } catch (Exception e) {
-                    FirebaseCrash.report(e);
-                }
-            }
-
-            @Override
-            public void onTimeout() {
-
-            }
-        };
+    private void enableMyLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -185,18 +152,34 @@ public class RouteDestinations extends AppCompatActivity implements OnMapReadyCa
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        tracker.startListening();
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                builder.include(loc);
+            }
+        });
     }
 
     @Override
     protected void onPause() {
-        tracker.stopListening();
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        tracker.stopListening();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
     }
 }

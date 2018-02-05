@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashActivity"
+            android:name="illiyin.mhandharbeni.visualize.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -31,16 +31,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WelcomeScreen" android:theme="@style/WelcomeScreenTheme"/>
+        <activity android:name="illiyin.mhandharbeni.visualize.WelcomeScreen" android:theme="@style/WelcomeScreenTheme"/>
         <activity
-            android:name=".MainActivity"
+            android:name="illiyin.mhandharbeni.visualize.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".NavActivity"
+            android:name="illiyin.mhandharbeni.visualize.NavActivity"
             android:label="@string/title_activity_nav"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".navpackage.mainnav.group.room.DetailGroup"
+            android:name="illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.DetailGroup"
             android:label="@string/title_activity_detail_group" />
 
         <meta-data
@@ -48,10 +48,10 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".navpackage.mainnav.group.room.activity.RouteDestinations"
+            android:name="illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.activity.RouteDestinations"
             android:label="@string/title_activity_route_destinations"/>
 
-        <activity android:name=".navpackage.mainnav.ImageProfile" />
+        <activity android:name="illiyin.mhandharbeni.visualize.navpackage.mainnav.ImageProfile" />
     </application>
 
 </manifest>

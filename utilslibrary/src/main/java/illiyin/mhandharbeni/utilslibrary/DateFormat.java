@@ -3,8 +3,6 @@ package illiyin.mhandharbeni.utilslibrary;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by root on 10/3/17.

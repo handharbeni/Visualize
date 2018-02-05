@@ -4,7 +4,7 @@
     android:padding="@dimen/padding_listitem"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         app:srcCompat="@drawable/ic_people_grey"
         android:id="@+id/image"
         android:layout_width="@dimen/size_image"

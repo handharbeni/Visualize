@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="illiyin.mhandharbeni.visualize.NavActivity">
+    tools:context="illiyin.mhandharbeni.visualize.faizalabs.mhandharbeni.visualize.NavActivity">
 
     <android.support.design.widget.AppBarLayout
         app:elevation="0dp"

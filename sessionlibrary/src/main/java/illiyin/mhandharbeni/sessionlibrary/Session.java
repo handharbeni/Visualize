@@ -1,11 +1,8 @@
 package illiyin.mhandharbeni.sessionlibrary;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.pddstudio.preferences.encrypted.EncryptedPreferences;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by root on 17/07/17.

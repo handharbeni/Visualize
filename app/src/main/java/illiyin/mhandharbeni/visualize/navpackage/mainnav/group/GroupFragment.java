@@ -1,7 +1,7 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.group;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,11 +14,12 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
+import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.adapter.GroupAdapter;
+import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.DetailGroup;
+import illiyin.mhandharbeni.visualize.utils.DeleteItem;
 import illiyin.mhandharbeni.databasemodule.GrupModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
 import illiyin.mhandharbeni.visualize.R;
-import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.adapter.GroupAdapter;
-import illiyin.mhandharbeni.visualize.utils.DeleteItem;
 import illiyin.mhandharbeni.visualize.utils.DividerRecycleView;
 import io.realm.RealmResults;
 
@@ -95,24 +96,50 @@ public class GroupFragment extends Fragment implements DeleteItem {
     public void onConfirmDelete(int id, String message) {
         showDialog(id, message);
     }
+
+    @Override
+    public void onConfirmGrup(int id, String message) {
+        showConfirmDialog(id, message);
+    }
+
+    private void showConfirmDialog(final int id, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getWindow().getContext());
+        builder.setMessage(message);
+        builder.setPositiveButton("Yes", (dialog, which) -> confirmGrup(id));
+        builder.setNegativeButton("No", (dialog, which) -> {
+
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void confirmGrup(int id){
+        try {
+            Bundle b = new Bundle();
+            b.putInt("id", id);
+
+            Intent i = new Intent(getContext(), DetailGroup.class);
+
+            i.putExtras(b);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            getContext().startActivity(i);
+            adapterModel.konfirmasi_masuk_grup(String.valueOf(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void showDialog(final int id, String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getWindow().getContext());
         builder.setMessage(message);
-        builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    deleteData(id);
-                } catch (Exception e) {
-                    FirebaseCrash.report(e);
-                }
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            try {
+                deleteData(id);
+            } catch (Exception e) {
+                FirebaseCrash.report(e);
             }
         });
-        builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setNegativeButton("No", (dialog, which) -> {
 
-            }
         });
         AlertDialog dialog = builder.create();
         dialog.show();

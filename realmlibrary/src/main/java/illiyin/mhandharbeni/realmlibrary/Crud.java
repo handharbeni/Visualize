@@ -16,13 +16,17 @@ import io.realm.Sort;
 public class Crud {
     Context context;
     CRUDRealm crudRealm;
-    RealmObject realmObject;
+    private RealmObject realmObject;
     public Crud(Context context, RealmObject realmObject) {
         this.context = context;
         this.realmObject = realmObject;
         if (crudRealm == null){
             crudRealm = new CRUDRealm(this.context, this.realmObject);
         }
+    }
+
+    public RealmObject getRealmObject(){
+        return this.realmObject;
     }
 
     public void create(RealmObject realmObject){

@@ -1,7 +1,6 @@
 package illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.fragment;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -76,24 +75,24 @@ public class PlaceList extends Fragment implements DeleteItem{
     public void onConfirmDelete(int id, String message) {
         showDialog(id, message);
     }
+
+    @Override
+    public void onConfirmGrup(int id, String message) {
+
+    }
+
     private void showDialog(final int id, String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getWindow().getContext());
         builder.setMessage(message);
-        builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    deleteData(id);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            try {
+                deleteData(id);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
-        builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setNegativeButton("No", (dialog, which) -> {
 
-            }
         });
         AlertDialog dialog = builder.create();
         dialog.show();

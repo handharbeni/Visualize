@@ -7,11 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.stephentuso.welcome.WelcomeFinisher;
 import com.stephentuso.welcome.WelcomePage;
 import com.stephentuso.welcome.WelcomeUtils;
-
-import illiyin.mhandharbeni.visualize.R;
 
 /**
  * Created by root on 1/2/18.
@@ -25,14 +22,14 @@ public class FragmentSlideThree extends Fragment implements WelcomePage.OnChange
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.__slide_fragment_slide_three, container, false);
+        return inflater.inflate(illiyin.mhandharbeni.visualize.R.layout.__slide_fragment_slide_three, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rootLayout = (ViewGroup) view.findViewById(R.id.layout);
+        rootLayout = (ViewGroup) view.findViewById(illiyin.mhandharbeni.visualize.R.id.layout);
 
 //        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
 //            @Override

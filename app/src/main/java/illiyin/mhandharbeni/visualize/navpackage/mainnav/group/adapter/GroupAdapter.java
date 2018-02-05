@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.bumptech.glide.Glide;
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 import illiyin.mhandharbeni.databasemodule.GrupModel;
 import illiyin.mhandharbeni.sessionlibrary.SessionListener;
@@ -39,27 +39,23 @@ public class GroupAdapter extends RealmBasedRecyclerViewAdapter<GrupModel, Group
         final GrupModel m = realmResults.get(i);
         assert m != null;
         myViewHolder.title.setText(m.getNama_grup());
-        myViewHolder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        myViewHolder.title.setOnClickListener(view -> {
+            if (m.getConfirmation().equalsIgnoreCase("Y")){
                 gotoDetail(m.getId());
+            }else{
+                deleteItem.onConfirmGrup(m.getId(), "Yakin masuk grup?");
             }
         });
-        myViewHolder.subtitle.setVisibility(View.INVISIBLE);
-        myViewHolder.image.setVisibility(View.GONE);
-        myViewHolder.listparent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        Glide.with(getContext()).load(R.drawable.icon_group).into(myViewHolder.image);
+        myViewHolder.subtitle.setText(m.getNama_user());
+        myViewHolder.listparent.setOnClickListener(view -> {
+            if (m.getConfirmation().equalsIgnoreCase("Y")){
                 gotoDetail(m.getId());
+            }else{
+                deleteItem.onConfirmGrup(m.getId(), "Yakin masuk grup?");
             }
         });
-        myViewHolder.iconDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteItem.onConfirmDelete(m.getId(), "Yakin akan Hapus Grup?");
-            }
-        });
-
+        myViewHolder.iconDelete.setOnClickListener(v -> deleteItem.onConfirmDelete(m.getId(), "Are sure want to remove Group?"));
     }
     private void gotoDetail(Integer id){
         try {
@@ -72,7 +68,7 @@ public class GroupAdapter extends RealmBasedRecyclerViewAdapter<GrupModel, Group
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             getContext().startActivity(i);
-            adapterModel.konfirmasi_masuk_grup(String.valueOf(id));
+//            adapterModel.konfirmasi_masuk_grup(String.valueOf(id));
         } catch (Exception e) {
             e.printStackTrace();
         }

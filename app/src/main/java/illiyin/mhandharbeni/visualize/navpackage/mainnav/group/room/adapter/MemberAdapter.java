@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import illiyin.mhandharbeni.databasemodule.MemberModel;
-import illiyin.mhandharbeni.visualize.R;
+import illiyin.mhandharbeni.visualize.utils.DeleteItem;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
@@ -21,10 +21,11 @@ import io.realm.RealmViewHolder;
  */
 
 public class MemberAdapter extends RealmBasedRecyclerViewAdapter<MemberModel, MemberAdapter.MyViewHolder> {
+    private DeleteItem deleteItem;
 
     @Override
     public MemberAdapter.MyViewHolder onCreateRealmViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = inflater.inflate(R.layout.__navactivity_mainnav_itemlist, viewGroup, false);
+        View v = inflater.inflate(illiyin.mhandharbeni.visualize.R.layout.__navactivity_mainnav_itemlist, viewGroup, false);
         return new MemberAdapter.MyViewHolder((ConstraintLayout) v);
     }
 
@@ -35,7 +36,12 @@ public class MemberAdapter extends RealmBasedRecyclerViewAdapter<MemberModel, Me
         Glide.with(getContext()).load(m.getImage()).into(myViewHolder.image);
         myViewHolder.title.setText(m.getNama());
         myViewHolder.subtitle.setText(m.getNo_telp());
-        myViewHolder.iconDelete.setVisibility(View.GONE);
+        myViewHolder.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteItem.onConfirmDelete(m.getId(), "Remove Member?");
+            }
+        });
     }
     class MyViewHolder extends RealmViewHolder {
         ConstraintLayout listparent;
@@ -44,14 +50,15 @@ public class MemberAdapter extends RealmBasedRecyclerViewAdapter<MemberModel, Me
         ImageView iconDelete;
         MyViewHolder(ConstraintLayout container) {
             super(container);
-            this.listparent = container.findViewById(R.id.listparent);
-            this.image = container.findViewById(R.id.image);
-            this.title = container.findViewById(R.id.title);
-            this.subtitle = container.findViewById(R.id.subtitle);
-            this.iconDelete = container.findViewById(R.id.iconDelete);
+            this.listparent = container.findViewById(illiyin.mhandharbeni.visualize.R.id.listparent);
+            this.image = container.findViewById(illiyin.mhandharbeni.visualize.R.id.image);
+            this.title = container.findViewById(illiyin.mhandharbeni.visualize.R.id.title);
+            this.subtitle = container.findViewById(illiyin.mhandharbeni.visualize.R.id.subtitle);
+            this.iconDelete = container.findViewById(illiyin.mhandharbeni.visualize.R.id.iconDelete);
         }
     }
-    public MemberAdapter(Context context, RealmResults<MemberModel> realmResults, boolean automaticUpdate) {
+    public MemberAdapter(Context context, RealmResults<MemberModel> realmResults, boolean automaticUpdate, DeleteItem deleteItem) {
         super(context, realmResults, automaticUpdate, false);
+        this.deleteItem = deleteItem;
     }
 }

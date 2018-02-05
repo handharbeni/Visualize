@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
-import illiyin.mhandharbeni.databasemodule.ChatModel;
 import illiyin.mhandharbeni.realmlibrary.Crud;
-import illiyin.mhandharbeni.visualize.R;
+import illiyin.mhandharbeni.databasemodule.ChatModel;
 import illiyin.mhandharbeni.visualize.navpackage.mainnav.group.room.adapter.ChatAdapter;
 import io.realm.RealmResults;
 
@@ -27,7 +26,7 @@ public class ChatList extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.__navactivity_mainnav_layout_group_listchat, container, false);
+        v = inflater.inflate(illiyin.mhandharbeni.visualize.R.layout.__navactivity_mainnav_layout_group_listchat, container, false);
         return v;
     }
 
@@ -52,7 +51,7 @@ public class ChatList extends Fragment {
     }
 
     private void fetch_element(){
-        listchat = v.findViewById(R.id.listchat);
+        listchat = v.findViewById(illiyin.mhandharbeni.visualize.R.id.listchat);
     }
 
     private void fetch_adapter(){

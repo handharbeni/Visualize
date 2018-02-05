@@ -5,8 +5,6 @@ import android.content.Intent;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.json.JSONException;
-
 import illiyin.mhandharbeni.databasemodule.AdapterModel;
 
 /**
